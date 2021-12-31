@@ -16,8 +16,11 @@ LIST OF FUNCTIONS:
                 Matrix must have same rows and columns
                 
 SAMPLES:
+0) Import the module:
+    >>> import Py_Matrix as py_m
+    
 1) Create a Matrix from a dataset:
-    >>> A = Matrix([1,2,3,4], 2, 2)
+    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
     
 2) Print a Matrix:
     >>> print(A)
@@ -34,8 +37,8 @@ SAMPLES:
 
 4) Add two Matrix:
     WARNING: Matrix must have same rows and columns
-    >>> A = Matrix([1,2,3,4], 2, 2)
-    >>> B = Matrix([4,3,2,1], 2, 2)
+    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
+    >>> B = py_m.Matrix([4,3,2,1], 2, 2)
     >>> print(A+B)
     Output:
     0| 5     5     
