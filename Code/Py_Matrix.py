@@ -14,6 +14,11 @@ LIST OF FUNCTIONS:
             - __add__():
                 It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
                 Matrix must have same rows and columns
+            - __mul__():
+                Two possibilities: if 'other' is a number or if it is a matrix.
+                - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
+                - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
+                
                 
 SAMPLES:
 0) Import the module:
@@ -35,7 +40,7 @@ SAMPLES:
     >>> print(A.elem(1,0)
     Output: 3
 
-4) Add two Matrix:
+4) Add two Matrix (Matrix + Matrix):
     WARNING: Matrix must have same rows and columns
     >>> A = py_m.Matrix([1,2,3,4], 2, 2)
     >>> B = py_m.Matrix([4,3,2,1], 2, 2)
@@ -44,7 +49,10 @@ SAMPLES:
     0| 5     5     
     1| 5     5     
        --    --
-       0     1   
+       0     1
+
+5) Matrix * Matrix
+6) Matrix * number
 '''
 
 class Matrix():
@@ -73,7 +81,7 @@ class Matrix():
         try:
             if value_type!=False: #so, it is a list
                 for i,e in enumerate(values_list):
-                    if type(e)!=int:
+                    if type(e)!=int or type(e)==list:
                         values_list[i]=0
                 if len(values_list)!=(rows*columns): #it is a list but it has not enough elements
                     adding_list = []
@@ -212,12 +220,42 @@ class Matrix():
         except Exception as e:
             print("Not possible to add two Matrix objects with different rows and columns")
             return None
+        
+    def __mul__(self, other):
+        """
+        Two possibilities: if 'other' is a number or if it is a matrix.
+        - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
+        - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
+        """
+        #MATRIX * MATRIX
+        if isinstance(self, Matrix) and isinstance(other, Matrix): #operation between Matrix and Matrix
+            print("2-wd")
+            C = Matrix([], self.r, other.c) #create a matrix
+            for i in range(0, C.r):
+                for j in range(0, other.c):
+                    sum_m = 0 #to store the sum
+                    for k in range(0, self.c):
+                        a_ik = self.matrix[i][k] #self.elem(i,k)
+                        b_kj = other.matrix[k][j] #other.elem(k,j)
+                        sum_m = sum_m + (a_ik * b_kj)
+                    C.elem_change(i, j, sum_m)
+            return C
 
-   
-A = Matrix([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 3, 5)
-B = Matrix([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 3, 5)
+        #MATRIX * NUMBER
+        if isinstance(self, Matrix)==True and (isinstance(other, int) or isinstance(other, float))==True: #operation between int or float and Matrix
+            pass
 
-print(A+B)
+
+
+
+A = Matrix([1,1,1,1,1,1,1,1,1], 3, 3)
+B = Matrix([1,1,1,1,1,1,1,1,1], 3, 3)
+
+#print(A)
+#print("")
+#print(B)
+#print("Result")
+print(A*B)
 
             
             
