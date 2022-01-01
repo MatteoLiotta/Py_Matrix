@@ -14,11 +14,17 @@ LIST OF FUNCTIONS:
             - __add__():
                 It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
                 Matrix must have same rows and columns
+                [it returns a new Matrix object]
             - __mul__():
                 Two possibilities: if 'other' is a number or if it is a matrix.
                 - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
                 - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
-                
+                [it returns a new Matrix object]
+            - t():
+                The function returns a new matrix which is the transpose of the given matrix. The transpose matrix is define by definition as:
+                    With A as a matrix (Aij), A.t() is (tAij), so:
+                    tAij = Aji
+                So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
                 
 SAMPLES:
 0) Import the module:
@@ -28,7 +34,7 @@ SAMPLES:
     >>> A = py_m.Matrix([1,2,3,4], 2, 2)
     
 2) Print a Matrix:
-    >>> print(A)
+    >>> print(A) #A previously declared
     Output:
     0| 1     2     
     1| 3     4     
@@ -37,7 +43,7 @@ SAMPLES:
 
 3) Print an element of the matrix, knowing row and column:
     WARNING: the first row is number 0, same as first column. It does not starts with 1
-    >>> print(A.elem(1,0)
+    >>> print(A.elem(1,0) #A previously declared
     Output: 3
 
 4) Add two Matrix (Matrix + Matrix):
@@ -51,8 +57,24 @@ SAMPLES:
        --    --
        0     1
 
-5) Matrix * Matrix
+5) Matrix * Matrix:
+    WARNING: Matrix multiplication is not commutative
+    >>>print(A*B) #A and B previously declared
+    Output:
+    0| 8     5     
+    1| 20    13    
+       --    --    
+       0     1 
+    
 6) Matrix * number
+    WARNING: 2*A is not implemented.
+    >>> print(A*2) #A and B previously declared
+    Output:
+    0| 2     4     
+    1| 6     8     
+       --    --    
+       0     1   
+    
 '''
 
 class Matrix():
@@ -229,7 +251,6 @@ class Matrix():
         """
         #MATRIX * MATRIX
         if isinstance(self, Matrix) and isinstance(other, Matrix): #operation between Matrix and Matrix
-            print("2-wd")
             C = Matrix([], self.r, other.c) #create a matrix
             for i in range(0, C.r):
                 for j in range(0, other.c):
@@ -243,19 +264,36 @@ class Matrix():
 
         #MATRIX * NUMBER
         if isinstance(self, Matrix)==True and (isinstance(other, int) or isinstance(other, float))==True: #operation between int or float and Matrix
-            pass
+            C = Matrix([], self.r, self.c) #create a matrix
+            for i in range(0, self.r):
+                for j in range(0, self.c):
+                    C.elem_change(i,j, 2*self.elem(i,j))
+            return C
+    def t(self):
+        """
+        The function returns a new matrix which is the transpose of the given matrix. The transpose matrix is define by definition as:
+            With A as a matrix (Aij), A.t() is (tAij), so:
+            tAij = Aji
+        So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
+        """
+        C = Matrix([], self.c, self.r) #because it will have switched self.matrix indices, c and r are switched.
+        for i in range(0, self.r):
+                for j in range(0, self.c):
+                    C.elem_change(j,i, self.elem(i,j)) #Change C element with (j,i) from self.matrix. [Elements of C were originally set as 0 with declaration]
+        return C
 
 
-
-
-A = Matrix([1,1,1,1,1,1,1,1,1], 3, 3)
-B = Matrix([1,1,1,1,1,1,1,1,1], 3, 3)
+A = Matrix([1,2,3,4], 2, 2)
+B = Matrix([4,3,2,1], 2, 2)
+E = Matrix([1,2,3,4,5,6,7,8,9], 2,2)
 
 #print(A)
 #print("")
 #print(B)
 #print("Result")
-print(A*B)
+print(E)
+print(E.t())
+print(E)
 
             
             
