@@ -279,16 +279,20 @@ class Matrix():
         """
         #MATRIX * MATRIX
         if isinstance(self, Matrix) and isinstance(other, Matrix): #operation between Matrix and Matrix
-            C = Matrix([], self.r, other.c) #create a matrix
-            for i in range(0, C.r):
-                for j in range(0, other.c):
-                    sum_m = 0 #to store the sum
-                    for k in range(0, self.c):
-                        a_ik = self.matrix[i][k] #self.elem(i,k)
-                        b_kj = other.matrix[k][j] #other.elem(k,j)
-                        sum_m = sum_m + (a_ik * b_kj)
-                    C.elem_change(i, j, sum_m)
-            return C
+            if self.c == other.r:
+                C = Matrix([], self.r, other.c) #create a matrix
+                for i in range(0, C.r):
+                    for j in range(0, other.c):
+                        sum_m = 0 #to store the sum
+                        for k in range(0, self.c):
+                            a_ik = self.matrix[i][k] #self.elem(i,k)
+                            b_kj = other.matrix[k][j] #other.elem(k,j)
+                            sum_m = sum_m + (a_ik * b_kj)
+                        C.elem_change(i, j, sum_m)
+                return C
+            else:
+                print("Must respect columns and rows rule. A*B is possible if A.c == B.r. None is returned")
+                return None
 
         #MATRIX * NUMBER
         if isinstance(self, Matrix)==True and (isinstance(other, int) or isinstance(other, float))==True: #operation between int or float and Matrix
@@ -377,14 +381,14 @@ class Matrix():
         
 
 A = Matrix([1,2,3,4], 2, 2)
-B = Matrix([4,3,2,1], 2, 2)
+B = Matrix([4,3,2,1], 3, 2)
 E = Matrix([1,2,3,4,5,6,7,8,9], 2,2)
 
 print(A)
 #print("")
 #print(B)
 #print("Result")
-print(A.elementary_op3(1, 0, -3))
+print(A*B)
 
             
             
