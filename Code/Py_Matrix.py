@@ -25,7 +25,17 @@ LIST OF FUNCTIONS:
                     With A as a matrix (Aij), A.t() is (tAij), so:
                     tAij = Aji
                 So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
-                
+            - elementary_op1():
+                The function returns a Matrix where row1 and row2 of self are switched.
+                It is the first elementary operation.
+            - elementary_op2():
+                The function returns a Matrix where row1 of self is multiplied by a chosen number.
+                It is the second elementary operation.
+            - elementary_op3():
+                The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
+                Value is required.
+                It is the third elementary operation.
+            
 SAMPLES:
 0) Import the module:
     >>> import Py_Matrix as py_m
@@ -74,7 +84,25 @@ SAMPLES:
     1| 6     8     
        --    --    
        0     1   
-    
+7) Transpose of a Matrix:
+    >>> print(A.t()) #A previously declared
+    Output:
+    0| 1     3     
+    1| 2     4     
+       --    --    
+       0     1 
+8) Elementary operation 3:
+    >>> A.elementary_op3(0,1,-3)
+    Then:
+    0| 1           2     
+    1| 3+(1)*(-3)  4+(2)*(-3)
+       --          --    
+       0           1
+    Output:
+    0| 1     2     
+    1| 0     -2    
+       --    --    
+       0     1
 '''
 
 class Matrix():
@@ -282,18 +310,81 @@ class Matrix():
                     C.elem_change(j,i, self.elem(i,j)) #Change C element with (j,i) from self.matrix. [Elements of C were originally set as 0 with declaration]
         return C
 
+    def elementary_op1(self, row1, row2):
+        """
+        The function returns a Matrix where row1 and row2 of self are switched.
+        It is the first elementary operation.
+        """
+        C = Matrix([], self.r, self.c)
+        for i in range(0, self.r):
+            for j in range(0, self.c):
+                C.elem_change(i, j, self.elem(i,j))
+        #C is now a copy of the A Matrix.
+
+        hold = C.matrix[row1]
+        C.matrix[row1] = C.matrix[row2]
+        C.matrix[row2] = hold
+        return C
+    
+    def elementary_op2(self, row, val):
+        """
+        The function returns a Matrix where row1 of self is multiplied by a chosen number.
+        It is the second elementary operation.
+        """
+        C = Matrix([], self.r, self.c)
+        for i in range(0, self.r):
+            for j in range(0, self.c):
+                C.elem_change(i, j, self.elem(i,j))
+        #C is now a copy of the A Matrix.
+
+        for j in range(0, self.c): #for each column
+            C.elem_change(row, j, val*C.elem(row, j))
+        return C
+
+    def elementary_op3(self, rowtochange, row, val):
+        """
+        The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
+        Value is required.
+        It is the third elementary operation.
+
+        Example:
+        0| 1     2     
+        1| 3     4     
+           --    --    
+           0     1
+        >>> A.elementary_op3(0,1,-3)
+        Then:
+        0| 1           2     
+        1| 3+(1)*(-3)  4+(2)*(-3)
+           --          --    
+           0           1
+        Output:
+        0| 1     2     
+        1| 0     -2    
+           --    --    
+           0     1
+        """
+        C = Matrix([], self.r, self.c)
+        for i in range(0, self.r):
+            for j in range(0, self.c):
+                C.elem_change(i, j, self.elem(i,j))
+        #C is now a copy of the A Matrix.
+
+        for j in range(0, self.c):
+            C.elem_change(rowtochange, j, (self.elem(rowtochange, j) + self.elem(row,j)*val))
+        return C
+        
+        
 
 A = Matrix([1,2,3,4], 2, 2)
 B = Matrix([4,3,2,1], 2, 2)
 E = Matrix([1,2,3,4,5,6,7,8,9], 2,2)
 
-#print(A)
+print(A)
 #print("")
 #print(B)
 #print("Result")
-print(E)
-print(E.t())
-print(E)
+print(A.elementary_op3(1, 0, -3))
 
             
             
