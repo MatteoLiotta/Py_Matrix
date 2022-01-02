@@ -1,5 +1,11 @@
 '''
-Matrix module
+Py_Matrix
+----------
+Module for matrix creation and matrix manipulation.
+Matrix are made as object class while metods are for matrix calculus and properties.
+----------
+Github: https://github.com/MatteoLiotta/Py_Matrix
+----------
 
 LIST OF FUNCTIONS:
             - .matrix_c():
@@ -506,17 +512,16 @@ def det_nxn(mat):
         print("Not a matrix")
         return None
 
+
 #TEST
-A = Matrix([1,2,3,4], 2,2)
-B = Matrix([1,0,0,0,1,0,0,0,1], 3, 3)
-E = Matrix([1,2,3,0,5,0,7,8,9], 3,3)
-F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
-print(A)
-#print("")
+#A = Matrix([1,2,3,4], 2,2)
+#B = Matrix([1,0,0,0,1,0,0,0,1], 3, 3)
+#E = Matrix([1,2,3,0,5,0,7,8,9], 3,3)
+#F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
+#print(A)
 #print(B)
 #print("Result")
-print(det_nxn(A))
-print(A.cofactor(0,0))
-            
+#print(det_nxn(A))
+#print(A.cofactor(0,0))      
             
             
