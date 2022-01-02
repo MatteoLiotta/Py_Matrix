@@ -165,6 +165,10 @@ class Matrix():
         self.r = rows
         self.c = columns
         self.matrix = self.matrix_c()
+
+        #determinant
+        self.det = det_nxn(self)
+        
         #print(self.v, self.r, self.c, self.matrix)
 
     def divide_list(self, lista, minimo, massimo):
@@ -268,6 +272,7 @@ class Matrix():
             while (k<self.c):
                 print(k, end="     ")
                 k+=1
+            print("")
             return ""
         else: #it only has a row. So, it is like: [[a,b,c,d,...,z]]
             print("0|", end =" ")
@@ -283,6 +288,7 @@ class Matrix():
             while (k<self.c):
                 print(k, end="     ")
                 k+=1
+            print("")
             return ""
             
     def __add__(self, other):
@@ -425,19 +431,69 @@ class Matrix():
                     list_sub.append(self.elem(i,j))
         C = Matrix(list_sub, self.r-1, self.c-1)
         return C
+
+    def cofactor(self, row, column):
+        """
+        The function returns the cofactor of a matrix, using definition.
+        """
+        return self.elem(row, column)*((-1)**(row+column))*det_nxn(self.sub(row,column))
     
+#DETERMINANT
+def det_2x2(mat):
+    """
+    The function returns the determinant of a matrix 2x2.
+    It is used as the base case in the recursion for the nxn determinant.
+    A control is implemented: matrix must be a square matrix and must be 2x2.
+    """
+    if isinstance(mat, Matrix): #mat must be a Matrix
+        if mat.c==mat.r and mat.c == 2: #mat must be 2x2
+            det_mat = 1*(mat.elem(0,0)*mat.elem(1,1)) + (-1)*(mat.elem(1,0)*mat.elem(0,1))
+            return det_mat
+        else:
+            print("Matrix must be 2x2")
+            return None
+    else:
+        print("Not a Matrix")
+        return None
 
-A = Matrix([1,2,3,4,5,6], 3, 2)
-B = Matrix([4,3,2,1], 1, 1)
-E = Matrix([1,2,3,4,5,6,7,8,9], 3,3)
+def det_nxn(mat):
+    """
+    The function returns the determinant of a matrix.
+    The determinant is recursively obtained using Laplace Formula, as sum of multiplication between
+    elements (i,j) and the cofactor(i,j).
 
+    In case of a 1x1 matrix, is returned the element (0,0) of the matrix.
+    """
+    if isinstance(mat, Matrix): #mat must be a matrix
+        if mat.c == mat.r: #mat must be a square matrix
+            if mat.c == 2: return det_2x2(mat) #BASE CASE for the recursion
+            if mat.c == 1: return int(mat.elem(0,0)) #if 1x1, the determinant is a number: it is the element of the 1x1 matrix
+            else: #FORMULA
+                somma = 0
+                i = 0
+                for j in range (0, mat.c): #Iteration: row = 0, column = (0 to self.c-1)
+                    C = mat.sub(i,j) #C is a submatrix obtained deleting the row i and column j
+                    add = mat.elem(i, j)*((-1)**(i+j))*det_nxn(C) #cofactor calcolus, used in the following expression
+                    somma = somma + add
+                return somma
+        else:
+            print("Matrix is not a square matrix")
+            return None
+    else:
+        print("Not a matrix")
+        return None
+
+#TEST
+A = Matrix([1,2,2,4], 2,2)
+B = Matrix([1,0,0,0,1,0,0,0,1], 3, 3)
+E = Matrix([1,2,3,0,5,0,7,8,9], 3,3)
+F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
 print(A)
 #print("")
 #print(B)
 #print("Result")
-print(E.sub(0,0))
-print(len(A.sub(0,0).matrix))
-
+print(det_nxn(A))
+print(A.cofactor(0,0))
             
             
             
