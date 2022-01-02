@@ -35,6 +35,11 @@ LIST OF FUNCTIONS:
                 The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
                 Value is required.
                 It is the third elementary operation.
+            - sub():
+                The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
+                The matrix avoid taking elements with row_deleted or column deleted ad indices.
+                The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
+                To unify cases, it will all be done in the second way.
             
 SAMPLES:
 0) Import the module:
@@ -103,6 +108,13 @@ SAMPLES:
     1| 0     -2    
        --    --    
        0     1
+
+9) Submatrix of a matrix:
+    >>> print(A.sub(0,0)) #A previously declared
+    Output:
+    0| 4       
+       --   
+       0
 '''
 
 class Matrix():
@@ -196,7 +208,12 @@ class Matrix():
         if r_chosen == 0 or c_chosen == 0:
             r_chosen = self.r
             c_chosen = self.c
+
+        if r_chosen == 1 or c_chosen == 1: #if there is just a row or a column
+            if r_chosen ==1 and c_chosen == 1: #if it is 1x1
+                return [[self.v[0]]]
             
+        
         self.matrix = []
         cont = 0
         list_tmp = []
@@ -236,22 +253,38 @@ class Matrix():
         """
         Function used to print a matrix in order to make it more pretty
         """
-        for i in range(0, self.r):
-            print(i, end="| ")
-            for j in range(0, self.c):
-                print("%-5d" %(self.matrix[i][j]), end=" ")
+        if len(self.matrix)>1: #it must have at least 2 rows.
+            for i in range(0, self.r):
+                print(i, end="| ")
+                for j in range(0, self.c):
+                    print("%-5d" %(self.matrix[i][j]), end=" ")
+                print("")
+            print("   ", end="")
+            for u in range(0, self.c):
+                print("--"+4*" ", end="")
             print("")
-        print("   ", end="")
-        for u in range(0, self.c):
-            print("--"+4*" ", end="")
-        print("")
-        print("   ", end="")
-        k=0
-        while (k<self.c):
-            print(k, end="     ")
-            k+=1
-        return ""
-
+            print("   ", end="")
+            k=0
+            while (k<self.c):
+                print(k, end="     ")
+                k+=1
+            return ""
+        else: #it only has a row. So, it is like: [[a,b,c,d,...,z]]
+            print("0|", end =" ")
+            for i in range(0, self.c):
+                print("%-5d" %(self.matrix[0][i]), end=" ")
+            print("")
+            print("   ", end="")
+            for u in range(0, self.c):
+                print("--"+4*" ", end="")
+            print("")
+            print("   ", end="")
+            k=0
+            while (k<self.c):
+                print(k, end="     ")
+                k+=1
+            return ""
+            
     def __add__(self, other):
         """
         It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
@@ -377,18 +410,33 @@ class Matrix():
         for j in range(0, self.c):
             C.elem_change(rowtochange, j, (self.elem(rowtochange, j) + self.elem(row,j)*val))
         return C
-        
-        
 
-A = Matrix([1,2,3,4], 2, 2)
-B = Matrix([4,3,2,1], 3, 2)
-E = Matrix([1,2,3,4,5,6,7,8,9], 2,2)
+    def sub(self, row_deleted, column_deleted):
+        """
+        The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
+        The matrix avoid taking elements with row_deleted or column deleted ad indices.
+        The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
+        To unify cases, it will all be done in the second way.
+        """
+        list_sub = []
+        for i in range(0, self.r):
+            for j in range(0, self.c):
+                if i != row_deleted and j != column_deleted:
+                    list_sub.append(self.elem(i,j))
+        C = Matrix(list_sub, self.r-1, self.c-1)
+        return C
+    
+
+A = Matrix([1,2,3,4,5,6], 3, 2)
+B = Matrix([4,3,2,1], 1, 1)
+E = Matrix([1,2,3,4,5,6,7,8,9], 3,3)
 
 print(A)
 #print("")
 #print(B)
 #print("Result")
-print(A*B)
+print(E.sub(0,0))
+print(len(A.sub(0,0).matrix))
 
             
             
