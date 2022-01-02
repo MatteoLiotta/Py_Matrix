@@ -2,44 +2,51 @@
 Matrix module
 
 LIST OF FUNCTIONS:
-            - matrix_c():
+            - .matrix_c():
                 creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
-            - __str__():
+            - .__str__():
                 print in a pretty and comprehensible way the matrix.
-            - elem():
+            - .elem():
                 Return a specific element of the matrix. User has to choose row and column, then the element in that row and column is returned.
-            - elem_change():
+            - .elem_change():
                 It changes a specific element of the matrix. User has to choose row and column, then the element in that row and column is changed whit the entered value.
                 It is also possible to refer to the matrix as self.matrix[i][j], whitout using this function.
-            - __add__():
+            - .__add__():
                 It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
                 Matrix must have same rows and columns
                 [it returns a new Matrix object]
-            - __mul__():
+            - .__mul__():
                 Two possibilities: if 'other' is a number or if it is a matrix.
                 - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
                 - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
                 [it returns a new Matrix object]
-            - t():
+            - .t():
                 The function returns a new matrix which is the transpose of the given matrix. The transpose matrix is define by definition as:
                     With A as a matrix (Aij), A.t() is (tAij), so:
                     tAij = Aji
                 So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
-            - elementary_op1():
+            - .elementary_op1():
                 The function returns a Matrix where row1 and row2 of self are switched.
                 It is the first elementary operation.
-            - elementary_op2():
+            - .elementary_op2():
                 The function returns a Matrix where row1 of self is multiplied by a chosen number.
                 It is the second elementary operation.
-            - elementary_op3():
+            - .elementary_op3():
                 The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
                 Value is required.
                 It is the third elementary operation.
-            - sub():
+            - .sub():
                 The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
                 The matrix avoid taking elements with row_deleted or column deleted ad indices.
                 The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
                 To unify cases, it will all be done in the second way.
+            - det_nxn(matrix):
+                The function returns the determinant of a matrix.
+                The determinant is recursively obtained using Laplace Formula, as sum of multiplication between
+                elements (i,j) and the cofactor(i,j).
+                In case of a 1x1 matrix, is returned the element (0,0) of the matrix.
+            - .cofactor():
+                The function returns the cofactor of a matrix, using definition.
             
 SAMPLES:
 0) Import the module:
@@ -115,6 +122,22 @@ SAMPLES:
     0| 4       
        --   
        0
+
+10) Determinant of a matrix (2 ways)
+    1)
+    >>> print(A.det)
+    #return a number
+
+    2)
+    >>> print(det_nxn(A))
+
+    Better to use 1) instead of 2)
+
+11) Cofactor of a Matrix:
+    #deleting the element in (0,0)
+    >>> print(A.cofactor(0,0)) #A previously declared
+    Output: 4
+    
 '''
 
 class Matrix():
@@ -484,7 +507,7 @@ def det_nxn(mat):
         return None
 
 #TEST
-A = Matrix([1,2,2,4], 2,2)
+A = Matrix([1,2,3,4], 2,2)
 B = Matrix([1,0,0,0,1,0,0,0,1], 3, 3)
 E = Matrix([1,2,3,0,5,0,7,8,9], 3,3)
 F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
