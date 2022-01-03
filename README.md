@@ -3,6 +3,8 @@ Module for matrix creation and matrix manipulation.\
 Matrix are made as object class while metods are for matrix calculus and properties.
 > Programming Language: Python.
 
+#### FILE:
+> You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py)
 
 ### LIST OF FUNCTIONS:
 -------
