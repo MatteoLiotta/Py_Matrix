@@ -8,20 +8,20 @@ Github: https://github.com/MatteoLiotta/Py_Matrix
 ----------
 
 LIST OF FUNCTIONS:
-            - .matrix_c():
+            - .matrix_c(...):
                 creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
-            - .__str__():
+            - .__str__(...):
                 print in a pretty and comprehensible way the matrix.
-            - .elem():
+            - .elem(...):
                 Return a specific element of the matrix. User has to choose row and column, then the element in that row and column is returned.
-            - .elem_change():
+            - .elem_change(...):
                 It changes a specific element of the matrix. User has to choose row and column, then the element in that row and column is changed whit the entered value.
                 It is also possible to refer to the matrix as self.matrix[i][j], whitout using this function.
-            - .__add__():
+            - + :
                 It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
                 Matrix must have same rows and columns
                 [it returns a new Matrix object]
-            - .__mul__():
+            - * :
                 Two possibilities: if 'other' is a number or if it is a matrix.
                 - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
                 - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
@@ -31,17 +31,17 @@ LIST OF FUNCTIONS:
                     With A as a matrix (Aij), A.t() is (tAij), so:
                     tAij = Aji
                 So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
-            - .elementary_op1():
+            - .elementary_op1(...):
                 The function returns a Matrix where row1 and row2 of self are switched.
                 It is the first elementary operation.
-            - .elementary_op2():
+            - .elementary_op2(...):
                 The function returns a Matrix where row1 of self is multiplied by a chosen number.
                 It is the second elementary operation.
-            - .elementary_op3():
+            - .elementary_op3(...):
                 The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
                 Value is required.
                 It is the third elementary operation.
-            - .sub():
+            - .sub(...):
                 The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
                 The matrix avoid taking elements with row_deleted or column deleted ad indices.
                 The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
@@ -51,9 +51,12 @@ LIST OF FUNCTIONS:
                 The determinant is recursively obtained using Laplace Formula, as sum of multiplication between
                 elements (i,j) and the cofactor(i,j).
                 In case of a 1x1 matrix, is returned the element (0,0) of the matrix.
-            - .cofactor():
+            - .cofactor(...):
                 The function returns the cofactor of a matrix, using definition.
-            
+            - .cof_matrix():
+                The function returns the cofactor of a matrix, using definition.
+            - .inverse():
+                Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix.
 SAMPLES:
 0) Import the module:
     >>> import Py_Matrix as py_m
@@ -171,15 +174,19 @@ class Matrix():
         #Check: lenght of the dataset. Must be rows*columns or minus
         try:
             if value_type!=False: #so, it is a list
-                for i,e in enumerate(values_list):
+                for i,e in enumerate(values_list): #change values, if not correct
                     if type(e)!=int or type(e)==list:
-                        values_list[i]=0
+                        if type(e) == float:
+                            pass
+                        else:
+                            values_list[i]=0
                 if len(values_list)!=(rows*columns): #it is a list but it has not enough elements
                     adding_list = []
                     for t in range(len(values_list), rows*columns):
                         adding_list.append(0)
                     values_list = values_list+adding_list #do create a list, which has n-k elements - those that are missing
                     #raise ValueError
+                #if it is like [[1,2],[3,4]], it is a matrix: all 0. Must enter a list [n,...,k]
             else: #it is not a list or it is not correct. It creates a list
                 adding_list = []
                 for t in range(0, rows*columns):
@@ -290,7 +297,10 @@ class Matrix():
             for i in range(0, self.r):
                 print(i, end="| ")
                 for j in range(0, self.c):
-                    print("%-5d" %(self.matrix[i][j]), end=" ")
+                    if type(self.elem(i,j))==float:
+                        print("%-5.3f" %(self.matrix[i][j]), end=" ")
+                    else:
+                        print("%-5d" %(self.matrix[i][j]), end=" ")
                 print("")
             print("   ", end="")
             for u in range(0, self.c):
@@ -306,7 +316,10 @@ class Matrix():
         else: #it only has a row. So, it is like: [[a,b,c,d,...,z]]
             print("0|", end =" ")
             for i in range(0, self.c):
-                print("%-5d" %(self.matrix[0][i]), end=" ")
+                if type(self.elem(0,j))==float:
+                        print("%-5.3f" %(self.matrix[0][j]), end=" ")
+                else:
+                    print("%-5d" %(self.matrix[0][j]), end=" ")
             print("")
             print("   ", end="")
             for u in range(0, self.c):
@@ -367,7 +380,7 @@ class Matrix():
             C = Matrix([], self.r, self.c) #create a matrix
             for i in range(0, self.r):
                 for j in range(0, self.c):
-                    C.elem_change(i,j, 2*self.elem(i,j))
+                    C.elem_change(i,j, other*self.elem(i,j))
             return C
     def t(self):
         """
@@ -465,7 +478,31 @@ class Matrix():
         """
         The function returns the cofactor of a matrix, using definition.
         """
-        return self.elem(row, column)*((-1)**(row+column))*det_nxn(self.sub(row,column))
+        return ((-1)**(row+column))*det_nxn(self.sub(row,column))
+
+    def cof_matrix(self):
+        """
+        The function return the cofactor matrix, obtained changing each element (i,j) with the cofactor (i,j).
+        It uses the cofactor matrix definition.
+        """
+        C = Matrix([], self.r, self.c)
+        for i in range(self.r):
+            for j in range(self.c):
+                C.elem_change(i,j, self.cofactor(i,j))
+        return C
+
+    def inverse(self):
+        """
+        Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix
+        """
+        C = self.cof_matrix() #C is the cofactor matrix of matrix A
+        tC = C.t() #tC is the transpose of the cofactor matrix of matrix A
+        a = 1/self.det
+        for i in range(self.r):
+            for j in range(self.c):
+                tC.elem_change(i,j,tC.elem(i,j)*a)
+        return tC
+    
     
 #DETERMINANT
 def det_2x2(mat):
@@ -479,10 +516,10 @@ def det_2x2(mat):
             det_mat = 1*(mat.elem(0,0)*mat.elem(1,1)) + (-1)*(mat.elem(1,0)*mat.elem(0,1))
             return det_mat
         else:
-            print("Matrix must be 2x2")
+            #print("Matrix must be 2x2")
             return None
     else:
-        print("Not a Matrix")
+        #print("Not a Matrix")
         return None
 
 def det_nxn(mat):
@@ -506,22 +543,36 @@ def det_nxn(mat):
                     somma = somma + add
                 return somma
         else:
-            print("Matrix is not a square matrix")
+            #print("Matrix is not a square matrix")
             return None
     else:
-        print("Not a matrix")
+        #print("Not a matrix")
         return None
 
 
 #TEST
 #A = Matrix([1,2,3,4], 2,2)
-#B = Matrix([1,0,0,0,1,0,0,0,1], 3, 3)
-#E = Matrix([1,2,3,0,5,0,7,8,9], 3,3)
+#B = Matrix([1,3,0,4,1,6,0,3,1], 3, 3)
+#E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 3,3)
 #F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
 #print(A)
+#print(A.cof_matrix())
+#print(A.inverse())
+#print(A+B)
+
 #print(B)
-#print("Result")
-#print(det_nxn(A))
-#print(A.cofactor(0,0))      
-            
-            
+#print(B.cof_matrix())
+#print(B.inverse())
+#print(B+B)
+
+#print(E)
+#print(E.cof_matrix())
+#print(E.inverse())
+#print(E+B)
+
+#print(F)
+#print(F.cof_matrix())
+#print(F.inverse())
+#print(F+B)
+
+#print(E.inverse()*B.inverse())
