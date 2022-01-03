@@ -57,6 +57,15 @@ LIST OF FUNCTIONS:
                 The function returns the cofactor of a matrix, using definition.
             - .inverse():
                 Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix.
+            - switch_columns(...):
+                The function returns a matrix where the column_A of A is switched with columns_from_B of the matrix B
+            - cramer_rule(...):
+                For linear systems with square system matrix, without using invert matrix.
+                Used the definition of the Cramer Rule for linear systems.
+            _ square_linear_systems(...):
+                Use the function if you have to solve a linear system, where A matrix of the system is a square matrix.
+                It uses the definition: X = A^-1*B.
+                The vector that solves the system is returned.
 SAMPLES:
 0) Import the module:
     >>> import Py_Matrix as py_m
@@ -146,7 +155,23 @@ SAMPLES:
     #deleting the element in (0,0)
     >>> print(A.cofactor(0,0)) #A previously declared
     Output: 4
+
+12) Inverse Matrix:
+    >>> print(A.inverse()) #A previously declared
+    Output:
+    0| -2.000 1.000 
+    1| 1.500 -0.500 
+       --    --    
+       0     1  
     
+13) Cramer Rule on Linear System:
+    >>> B = Matrix([4,3],2,1)
+    >>> print(cramer_rule(A,B)) #A previously declared
+    Output:
+    0| -5.000 
+    1| 4.500 
+       --    
+       0    
 '''
 
 class Matrix():
@@ -552,13 +577,79 @@ def det_nxn(mat):
         #print("Not a matrix")
         return None
 
+#LINEAR SYSTEMS
+def switch_columns(A,B, column_A, column_from_B):
+    """
+    The function returns a matrix where the column_A of A is switched with columns_from_B of the matrix B
+    """
+    if isinstance(A, Matrix) and isinstance(B, Matrix):
+        if A.r == B.r:
+            #Create C as a copy of A
+            C = Matrix([], A.r, A.c)
+            for i in range(A.r):
+                for j in range(A.c):
+                    C.elem_change(i,j,A.elem(i,j))
+            for i in range(A.r):
+                for j in range(A.c):
+                    if j == column_A:
+                        C.elem_change(i,j, B.elem(i, column_from_B))
+            return C
+        else:
+            return None
+    else:
+        return None
+
+def cramer_rule(A,B):
+    """
+    For linear systems with square system matrix, without using invert matrix.
+    Used the definition of the Cramer Rule for linear systems.
+    """
+    if isinstance(A, Matrix) and isinstance(B, Matrix):
+        if A.det!=0 and B.c==1 :
+            list_x = []
+            #Create C as a copy of A
+            C = Matrix([], A.r, A.c)
+            for i in range(A.r):
+                for j in range(A.c):
+                    C.elem_change(i,j,A.elem(i,j))
+            #for each row
+            for j in range(A.c):
+                a = switch_columns(A,B, j, 0) #a is the matrix obtained switching the j row of A, whit B
+                list_x.append((det_nxn(a)/A.det)) #x_i is det(a)/det(A) for all i
+            X = Matrix(list_x, A.r, 1) #X is the matrix made of the results obtained during the iteration
+            return X
+        else: return None
+    else: return None
+
+def square_linear_system(A,B):
+    """
+    Use the function if you have to solve a linear system, where A matrix of the system is a square matrix.
+    It uses the definition: X = A^-1*B.
+    The vector that solves the system is returned.
+    """
+    if isinstance(A, Matrix) and isinstance(B, Matrix):
+        if A.det!=0 and B.c ==1:
+            #Create C as a copy of A.inverse()
+            C = Matrix([], A.r, A.c)
+            Ai = A.inverse()
+            for i in range(A.r):
+                for j in range(A.c):
+                    C.elem_change(i,j,Ai.elem(i,j))
+            X = C * B
+            return X
+            
+            
+    
 
 #TEST
-#A = Matrix([1,2,3,4], 2,2)
-#B = Matrix([1,3,0,4,1,6,0,3,1], 3, 3)
+#A = Matrix([1,2,3,4,5,6,7,8,10],3,3)
+#B = Matrix([1,3,0,4,1,6,0,3,1], 3, 1)
 #E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 3,3)
 #F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
 #print(A)
+#print(B)
+#print(cramer_rule(A,B))
+#print(square_linear_system(A,B))
 #print(A.cof_matrix())
 #print(A.inverse())
 #print(A+B)
@@ -577,5 +668,13 @@ def det_nxn(mat):
 #print(F.cof_matrix())
 #print(F.inverse())
 #print(F+B)
+#print(switch_columns(A, B, 0,0))
+#print(A)
+
+#A = Matrix([1,1,0,1], 2,2)
+#B = Matrix([5,3],2,1)
+#print(A)
+#print(B)
+#print(square_linear_system(A,B))
 
 #print(E.inverse()*B.inverse())
