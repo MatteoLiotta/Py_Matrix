@@ -6,25 +6,25 @@ Matrix are made as object class while metods are for matrix calculus and propert
 
 ### LIST OF FUNCTIONS:
 -------
- >- **.matrix_c():**\
+ >- **.matrix_c(...):**\
  >   creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
 
 >- **.__str__():**\
 >   print in a pretty and comprehensible way the matrix.
 
-> - **.elem():**\
+> - **.elem(...):**\
 >    Return a specific element of the matrix. User has to choose row and column, then the element in that row and column is returned.
 
-> - **.elem_change():**\
+> - **.elem_change(...):**\
 >    It changes a specific element of the matrix. User has to choose row and column, then the element in that row and column is changed whit the entered value.
 >    It is also possible to refer to the matrix as self.matrix[i][j], whitout using this function.
 
->- **.__add__():**\
+>- **+ :**\
 >    It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
 >    Matrix must have same rows and columns
 >    [it returns a new Matrix object]
 
->- **.__mul__():**\
+>- **\* :**\
 >    Two possibilities: if 'other' is a number or if it is a matrix.
 >   - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
 >   - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
@@ -36,20 +36,20 @@ Matrix are made as object class while metods are for matrix calculus and propert
 >    tAij = Aji
 >    So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
 
->- **.elementary_op1():**\
+>- **.elementary_op1(...):**\
 >    The function returns a Matrix where row1 and row2 of self are switched.
 >    It is the first elementary operation.
 
->- **.elementary_op2():**\
+>- **.elementary_op2(...):**\
 >    The function returns a Matrix where row1 of self is multiplied by a chosen number.
 >    It is the second elementary operation.
  
->- **.elementary_op3():**\
+>- **.elementary_op3(...):**\
 >    The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
 >    Value is required.
 >    It is the third elementary operation.
 
->- **.sub():**\
+>- **.sub(...):**\
 >    The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
 >    The matrix avoid taking elements with row_deleted or column deleted ad indices.
 >    The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
@@ -61,9 +61,13 @@ Matrix are made as object class while metods are for matrix calculus and propert
 >   elements (i,j) and the cofactor(i,j).
 >   In case of a 1x1 matrix, is returned the element (0,0) of the matrix.
 
->- **.cofactor():**\
+>- **.cofactor(...):**\
 >   The function returns the cofactor of a matrix, using definition.
 
+>- **.cof_matrix():**\
+>   The function returns the cofactor of a matrix, using definition.
+>- **.inverse():**\
+>   Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix.
 
 ### SAMPLES
 -------
