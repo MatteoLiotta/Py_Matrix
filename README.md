@@ -69,6 +69,18 @@ Matrix are made as object class while metods are for matrix calculus and propert
 >- **.inverse():**\
 >   Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix.
 
+>- **switch_columns(...)**:\
+>   The function returns a matrix where the column_A of A is switched with columns_from_B of the matrix B
+
+>- **cramer_rule(...)**:\
+>   For linear systems with square system matrix, without using invert matrix.
+>   Used the definition of the Cramer Rule for linear systems.
+
+>- **square_linear_systems(...)**:\
+>   Use the function if you have to solve a linear system where A matrix of the system is a square matrix.
+>   It uses the definition: X = A^-1*B.
+>   The vector that solves the system is returned.
+
 ### SAMPLES
 -------
 | Input/Code |
@@ -90,6 +102,8 @@ Matrix are made as object class while metods are for matrix calculus and propert
 |1. >>> print(A.det) #it returns a number |
 |2. >>> print(det_nxn(A)) #it returns a number|
 |12) _Cofactor of a Matrix:_ #deleting the element in (0,0) >>> print(A.cofactor(0,0)) #A previously declared|
+|13) _Inverse Matrix_: >>> print(A.inverse()) #A previously declared |
+|14) _Cramer Rule on Linear System_:  >>> B = Matrix([4,3],2,1) >>> print(cramer_rule(A,B)) #A previously declared|
 
 #### LICENSE
 > You can find license here: [LICENSE](https://github.com/MatteoLiotta/Py_Matrix/blob/main/LICENSE)
