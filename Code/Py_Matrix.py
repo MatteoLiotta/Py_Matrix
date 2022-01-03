@@ -10,7 +10,7 @@ Github: https://github.com/MatteoLiotta/Py_Matrix
 LIST OF FUNCTIONS:
             - .matrix_c(...):
                 creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
-            - .__str__(...):
+            - .__str__():
                 print in a pretty and comprehensible way the matrix.
             - .elem(...):
                 Return a specific element of the matrix. User has to choose row and column, then the element in that row and column is returned.
