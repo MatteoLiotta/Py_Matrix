@@ -495,13 +495,16 @@ class Matrix():
         """
         Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix
         """
-        C = self.cof_matrix() #C is the cofactor matrix of matrix A
-        tC = C.t() #tC is the transpose of the cofactor matrix of matrix A
-        a = 1/self.det
-        for i in range(self.r):
-            for j in range(self.c):
-                tC.elem_change(i,j,tC.elem(i,j)*a)
-        return tC
+        if self.det!=0:
+            C = self.cof_matrix() #C is the cofactor matrix of matrix A
+            tC = C.t() #tC is the transpose of the cofactor matrix of matrix A
+            a = 1/self.det
+            for i in range(self.r):
+                for j in range(self.c):
+                    tC.elem_change(i,j,tC.elem(i,j)*a)
+            return tC
+        return None
+    
     
     
 #DETERMINANT
