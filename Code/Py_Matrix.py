@@ -62,8 +62,8 @@ LIST OF FUNCTIONS:
             - cramer_rule(...):
                 For linear systems with square system matrix, without using invert matrix.
                 Used the definition of the Cramer Rule for linear systems.
-            _ square_linear_systems(...):
-                Use the function if you have to solve a linear system, where A matrix of the system is a square matrix.
+            - square_linear_systems(...):
+                Use the function if you have to solve a linear system where A, matrix of the system, is a square matrix.
                 It uses the definition: X = A^-1*B.
                 The vector that solves the system is returned.
 SAMPLES:
@@ -623,7 +623,7 @@ def cramer_rule(A,B):
 
 def square_linear_system(A,B):
     """
-    Use the function if you have to solve a linear system, where A matrix of the system is a square matrix.
+    Use the function if you have to solve a linear system where A, matrix of the system, is a square matrix.
     It uses the definition: X = A^-1*B.
     The vector that solves the system is returned.
     """
