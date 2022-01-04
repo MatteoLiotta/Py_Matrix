@@ -352,7 +352,7 @@ class Matrix():
             return ""
         else: #it only has a row. So, it is like: [[a,b,c,d,...,z]]
             print("0|", end =" ")
-            for i in range(0, self.c):
+            for j in range(0, self.c):
                 if type(self.elem(0,j))==float:
                         print("%-5.3f" %(self.matrix[0][j]), end=" ")
                 else:
@@ -678,7 +678,7 @@ def square_linear_system(A,B):
     
 
 #TEST
-#A = Matrix([1,2,3,4,5,6,7,8,10],2,2)
+#A = Matrix([1,2,3,4,5,6,7,8,10],1,2)
 #B = Matrix([1,3,0,4,1,6,0,3,1], 3, 1)
 #E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 3,3)
 #F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
@@ -714,4 +714,4 @@ def square_linear_system(A,B):
 #print(square_linear_system(A,B))
 
 #print(E.inverse()*B.inverse())
-#A.info()
+
