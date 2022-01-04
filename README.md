@@ -4,7 +4,7 @@ Matrix are made as object class while metods are for matrix calculus and propert
 > Programming Language: Python.
 
 #### FILE:
-> You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py)
+You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py)
 
 ### LIST OF FUNCTIONS:
 -------
@@ -202,7 +202,7 @@ Matrix are made as object class while metods are for matrix calculus and propert
     ```
     > Output:
     ```
-    -3
+    -2
     ```
 12) _Cofactor of a Matrix:_ 
     > deleting the element in (0,0)
