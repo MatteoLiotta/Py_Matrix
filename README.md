@@ -83,29 +83,157 @@ Matrix are made as object class while metods are for matrix calculus and propert
 >   It uses the definition: X = A^-1*B.
 >   The vector that solves the system is returned.
 
+>- **.info()**:\
+>   The function print all relevant informations about the matrix:
+>    - rows
+>    - columns
+>    - transpose
+>    - if square
+>         - determinant
+>         - inverse matrix
+>         - cofactor matrix
+
 ### SAMPLES
--------
-| Input/Code |
-| --- |
-|1) _Import the module:_ >>> import Py_Matrix as py_m |
-|2) _Create a Matrix from a dataset:_ >>> A = py_m.Matrix([1,2,3,4], 2, 2) |
-|3) _Print a Matrix:_ >>> print(A) #A previously declared|
-|4) _Print an element of the matrix, knowing row and column:_ >>> print(A.elem(1,0) #A previously declared|
-|5) _Add two Matrix (Matrix + Matrix):_ > WARNING: Matrix must have same rows and columns|
-|>>> A = py_m.Matrix([1,2,3,4], 2, 2) >>> B = py_m.Matrix([4,3,2,1], 2, 2) >>> print(A+B) 
-|6) _Matrix * Matrix:_ > WARNING: Matrix multiplication is not commutative|
-|>>>print(A\*B) #A and B previously declared|
-|7) _Matrix * number:_ WARNING: 2\*A is not implemented.|
-|>>> print(A\*2) #A and B previously declared|
-|8) _Transpose of a Matrix:_ >>> print(A.t()) #A previously declared|
-|9) _Elementary operation 3:_ >>> A.elementary_op3(0,1,-3)|
-|10) _Submatrix of a matrix:_ >>> print(A.sub(0,0)) #A previously declared|
-|11) _Determinant of a matrix (2 ways)_ 
-|1. >>> print(A.det) #it returns a number |
-|2. >>> print(det_nxn(A)) #it returns a number|
-|12) _Cofactor of a Matrix:_ #deleting the element in (0,0) >>> print(A.cofactor(0,0)) #A previously declared|
-|13) _Inverse Matrix_: >>> print(A.inverse()) #A previously declared |
-|14) _Cramer Rule on Linear System_:  >>> B = Matrix([4,3],2,1) >>> print(cramer_rule(A,B)) #A previously declared|
+------
+1) Import the module:_ 
+   ```
+   >>> import Py_Matrix as py_m 
+   ```
+   
+2) _Create a Matrix from a dataset:_ 
+   ```
+   >>> A = py_m.Matrix([1,2,3,4], 2, 2)
+   ```
+
+3) _Print a Matrix:_
+   ```
+   >>> A = py_m.Matrix([1,2,3,4], 2, 2)
+   >>> print(A)
+   ```
+   > Output:
+   ```
+   0| 1     2     
+   1| 3     4     
+      --    --
+      0     1
+   ```
+4) _Print an element of the matrix, with row and column:_ 
+   ```
+   >>> print(A.elem(1,0) #A previously declared
+   ```
+   > Output:
+   ```
+   3
+   ```
+5) _Add two Matrix (Matrix + Matrix):_ 
+   > WARNING: Matrix must have same rows and columns
+   ```
+   >>> A = py_m.Matrix([1,2,3,4], 2, 2) 
+   >>> B = py_m.Matrix([4,3,2,1], 2, 2) 
+   >>> print(A+B) 
+   ```
+   > Output:
+   ```
+   0| 5     5     
+   1| 5     5     
+      --    --
+      0     1
+   ```
+6) _Matrix * Matrix:_ 
+   > WARNING: Matrix multiplication is not commutative
+   ```
+   >>>print(A\*B) #A and B previously declared
+   ```
+   > Output:
+   ```
+   0| 8     5     
+   1| 20    13    
+      --    --
+      0     1
+   ```
+7) _Matrix * number:_ 
+   > WARNING: 2\*A is not implemented.
+   ```
+   >>> print(A\*2) #A and B previously declared
+   ```
+   > Output:
+   ```
+   0| 2     4     
+   1| 6     8     
+      --    --    
+      0     1  
+   ```
+8) _Transpose of a Matrix:_ 
+   ```
+   >>> print(A.t()) #A previously declared
+   ```
+   > Output:
+   ```
+   0| 1     3     
+   1| 2     4     
+      --    --    
+      0     1 
+   ```
+9) _Elementary operation 3:_ 
+   ```
+   >>> A.elementary_op3(0,1,-3)
+   ```
+   > Output:
+   ```
+   0| 1     2     
+   1| 0     -2    
+      --    --    
+      0     1
+   ```
+10) _Submatrix of a matrix:_ 
+    ```
+    >>> print(A.sub(0,0)) #A previously declared
+    ```
+    > Output:
+    ```
+    0| 4       
+       --   
+       0
+    ```
+11) _Determinant of a matrix (2 ways)_ 
+    ```
+    >>> print(A.det) #it returns determinant as a number
+    >>> print(det_nxn(A)) #it returns determinant a number
+    ```
+    > Output:
+    ```
+    -3
+    ```
+12) _Cofactor of a Matrix:_ 
+    > deleting the element in (0,0)
+    ```
+    >>> print(A.cofactor(0,0)) #A previously declared
+    ```
+    > Output:
+    ```
+    4
+    ```
+13) _Inverse Matrix_: 
+    ```
+    >>> print(A.inverse()) #A previously declared 
+    ```
+    > Output:
+    ```
+    0| -2.000 1.000 
+    1| 1.500 -0.500 
+       --    --    
+       0     1  
+    ```
+14) _Cramer Rule on Linear System_:  
+    ```
+    >>> B = Matrix([4,3],2,1) 
+    >>> print(cramer_rule(A,B)) #A previously declared
+    ```
+15) _Matrix Informations_:
+    ```
+    >>> A.info() #A previously declared
+    ```
 
 #### LICENSE
+------
 > You can find license here: [LICENSE](https://github.com/MatteoLiotta/Py_Matrix/blob/main/LICENSE)
