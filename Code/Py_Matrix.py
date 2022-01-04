@@ -66,6 +66,16 @@ LIST OF FUNCTIONS:
                 Use the function if you have to solve a linear system where A, matrix of the system, is a square matrix.
                 It uses the definition: X = A^-1*B.
                 The vector that solves the system is returned.
+            - .info():
+                The function print all relevant informations about the matrix:
+                - rows
+                - columns
+                - transpose
+                - if square
+                    - determinant
+                    - inverse matrix
+                    - cofactor matrix
+            
 SAMPLES:
 0) Import the module:
     >>> import Py_Matrix as py_m
@@ -171,7 +181,9 @@ SAMPLES:
     0| -5.000 
     1| 4.500 
        --    
-       0    
+       0
+14) Matrix Infromations:
+    >>> A.info() #A previously declared
 '''
 
 class Matrix():
@@ -530,8 +542,32 @@ class Matrix():
             return tC
         return None
     
-    
-    
+    def info(self):
+        """
+        The function print all relevant informations about the matrix.
+        In particular:
+        - rows
+        - columns
+        - transpose
+        - if square
+            - determinant
+            - inverse matrix
+            - cofactor matrix
+        """
+        print("MATRIX")
+        print(self)
+        print("-> Rows:", self.r)    
+        print("-> Columns:", self.c)
+        print("-> Transpose Matrix:")
+        print(self.t())
+        if self.r == self.c: #square
+            print("-> Determinant:", self.det)
+            print("-> Inverse:")
+            print(self.inverse())
+            print("-> Cofactor Matrix:")
+            print(self.cof_matrix())
+        return None
+        
 #DETERMINANT
 def det_2x2(mat):
     """
@@ -642,7 +678,7 @@ def square_linear_system(A,B):
     
 
 #TEST
-#A = Matrix([1,2,3,4,5,6,7,8,10],3,3)
+A = Matrix([1,2,3,4,5,6,7,8,10],3,3)
 #B = Matrix([1,3,0,4,1,6,0,3,1], 3, 1)
 #E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 3,3)
 #F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
@@ -678,3 +714,4 @@ def square_linear_system(A,B):
 #print(square_linear_system(A,B))
 
 #print(E.inverse()*B.inverse())
+A.info()
