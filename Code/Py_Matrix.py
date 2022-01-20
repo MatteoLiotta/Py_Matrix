@@ -75,6 +75,10 @@ LIST OF FUNCTIONS:
                     - determinant
                     - inverse matrix
                     - cofactor matrix
+            - .__iter__():
+                The function let the matrix be iterable
+            - .__next__():
+                The function update the iterator and return the element self.elem(i,j)
             
 SAMPLES:
 0) Import the module:
@@ -184,6 +188,15 @@ SAMPLES:
        0
 14) Matrix Infromations:
     >>> A.info() #A previously declared
+
+15) Matrix Iteration:
+    >>> for i in A: #A previously declared as Matrix([1,2,3,4],2,2)
+            print(i)
+    Output:
+    1
+    2
+    3
+    4
 '''
 
 class Matrix():
@@ -567,6 +580,24 @@ class Matrix():
             print("-> Cofactor Matrix:")
             print(self.cof_matrix())
         return None
+
+    def __iter__(self):
+        '''It makes the matrix iterable'''
+        self.iter_i=0
+        self.iter_j=0
+        return self
+        
+    def __next__(self):
+        '''It returns the element and update the iterator'''
+        if self.iter_i<self.r: #check for possible errors
+            result = self.elem(self.iter_i, self.iter_j) #the result is the element in the relative row and column
+            self.iter_j+=1 #while result stores the element, I must prepare the iterator for the next call. Add 1 to the column iterator
+            if self.iter_j>=self.c: #if bigger or equal to the number of columns - so it reaches the end of the row
+                self.iter_i+=1 #change row
+                self.iter_j=0 #go back to 0
+            return result #when everything is ready, return
+        else:
+            raise StopIteration #if in the next iteration the number of rows is wrong, stop the iteration
         
 #DETERMINANT
 def det_2x2(mat):
@@ -681,7 +712,7 @@ def square_linear_system(A,B):
 #A = Matrix([1,2,3,4,5,6,7,8,10],1,2)
 #
 #B = Matrix([1,3,0,4,1,6,0,3,1], 3, 1)
-#E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 3,3)
+#E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 2,3)
 #F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
 #print(A)
 #print(B)
@@ -714,5 +745,9 @@ def square_linear_system(A,B):
 #print(B)
 #print(square_linear_system(A,B))
 
-#print(E.inverse()*B.inverse())
+#print(E)
+
+#for i in E:
+    #print(i)
+
 
