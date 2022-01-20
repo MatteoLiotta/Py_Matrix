@@ -11,7 +11,7 @@ You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/P
  >- **.matrix_c(...):**\
  >   creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
 
->- **.__str__():**\
+>- **.\_\_str\_\_():**\
 >   print in a pretty and comprehensible way the matrix.
 
 > - **.elem(...):**\
@@ -92,6 +92,12 @@ You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/P
 >         - determinant
 >         - inverse matrix
 >         - cofactor matrix
+
+>- **.\_\_iter\_\_()**:\
+>    The function let the matrix be iterable
+
+>- **.\_\_next\_\_()**:\
+>    The function update the iterator and return the element self.elem(i,j)
 
 ### SAMPLES
 ------
@@ -226,12 +232,25 @@ You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/P
     ```
 14) _Cramer Rule on Linear System_:  
     ```
-    >>> B = Matrix([4,3],2,1) 
+    >>> B = py_m.Matrix([4,3],2,1) 
     >>> print(cramer_rule(A,B)) #A previously declared
     ```
 15) _Matrix Informations_:
     ```
     >>> A.info() #A previously declared
+    ```
+16) Matrix iteration:
+    ```
+    >>> A = py_m.Matrix([1,2,3,4,5,6],2,3)
+    >>> for i in A:
+            print(i)
+    ```
+    > Output:
+    ```
+    1
+    2
+    3
+    4
     ```
 
 #### LICENSE
