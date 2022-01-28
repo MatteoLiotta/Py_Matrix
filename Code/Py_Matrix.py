@@ -8,64 +8,81 @@ Github: https://github.com/MatteoLiotta/Py_Matrix
 ----------
 
 LIST OF FUNCTIONS:
-            - .matrix_c(...):
+            - .matrix_c([elements], rows, columns):
                 creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
+                
             - .__str__():
                 print in a pretty and comprehensible way the matrix.
-            - .elem(...):
+            - .elem(i,j):
+            
                 Return a specific element of the matrix. User has to choose row and column, then the element in that row and column is returned.
-            - .elem_change(...):
+            - .elem_change(i,j, value):
                 It changes a specific element of the matrix. User has to choose row and column, then the element in that row and column is changed whit the entered value.
                 It is also possible to refer to the matrix as self.matrix[i][j], whitout using this function.
+                
             - + :
                 It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
                 Matrix must have same rows and columns
                 [it returns a new Matrix object]
+                
             - * :
                 Two possibilities: if 'other' is a number or if it is a matrix.
                 - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
                 - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
                 [it returns a new Matrix object]
+                
             - .t():
                 The function returns a new matrix which is the transpose of the given matrix. The transpose matrix is define by definition as:
                     With A as a matrix (Aij), A.t() is (tAij), so:
                     tAij = Aji
                 So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
-            - .elementary_op1(...):
+                
+            - .elementary_op1(row1, row2):
                 The function returns a Matrix where row1 and row2 of self are switched.
                 It is the first elementary operation.
-            - .elementary_op2(...):
+                
+            - .elementary_op2(row, value):
                 The function returns a Matrix where row1 of self is multiplied by a chosen number.
                 It is the second elementary operation.
-            - .elementary_op3(...):
+                
+            - .elementary_op3(rowtochange, row, value):
                 The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
                 Value is required.
                 It is the third elementary operation.
-            - .sub(...):
+                
+            - .sub(i,j):
                 The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
                 The matrix avoid taking elements with row_deleted or column deleted ad indices.
                 The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
                 To unify cases, it will all be done in the second way.
+                
             - det_nxn(matrix):
                 The function returns the determinant of a matrix.
                 The determinant is recursively obtained using Laplace Formula, as sum of multiplication between
                 elements (i,j) and the cofactor(i,j).
                 In case of a 1x1 matrix, is returned the element (0,0) of the matrix.
-            - .cofactor(...):
+                
+            - .cofactor(i,j):
                 The function returns the cofactor of a matrix, using definition.
+                
             - .cof_matrix():
                 The function returns the cofactor of a matrix, using definition.
+                
             - .inverse():
                 Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix.
-            - switch_columns(...):
+                
+            - switch_columns(column, column):
                 The function returns a matrix where the column_A of A is switched with columns_from_B of the matrix B
-            - cramer_rule(...):
+                
+            - cramer_rule(Matrix, Matrix):
                 For linear systems with square system matrix, without using invert matrix.
                 Used the definition of the Cramer Rule for linear systems.
-            - square_linear_systems(...):
+                
+            - square_linear_systems(Matrix, Matrix):
                 Use the function if you have to solve a linear system where A, matrix of the system, is a square matrix.
                 It uses the definition: X = A^-1*B.
                 The vector that solves the system is returned.
+                
             - .info():
                 The function print all relevant informations about the matrix:
                 - rows
@@ -75,10 +92,18 @@ LIST OF FUNCTIONS:
                     - determinant
                     - inverse matrix
                     - cofactor matrix
+                    
             - .__iter__():
                 The function let the matrix be iterable
+                
             - .__next__():
                 The function update the iterator and return the element self.elem(i,j)
+
+            - len(Matrix):
+                The function returns the number of elements in the Matrix
+
+            - .find_pivot(row):
+                The function returns the pivot of a selected row. A pivot is the first element != 0 of a row.
             
 SAMPLES:
 0) Import the module:
@@ -197,6 +222,23 @@ SAMPLES:
     2
     3
     4
+
+16) Lenght:
+    >>> print(len(A)) #A previously declared as Matrix([1,2,3,4],2,2)
+    Output:
+    4
+
+17) Find Pivot:
+    >>> print(A) #A previously declared as Matrix([1,2,0,4],2,2)
+    Output:
+    0| 1     2     
+    1| 0     4    
+       --    --    
+       0     1
+    >>> print(A.find_pivot(1)) 
+    Output:
+    4
+    
 '''
 
 class Matrix():
@@ -598,6 +640,42 @@ class Matrix():
             return result #when everything is ready, return
         else:
             raise StopIteration #if in the next iteration the number of rows is wrong, stop the iteration
+
+    #GAUSS
+    def __len__(self):
+        number = 0
+        for i in self:
+            number+=1
+        return number
+            
+    def find_pivot(self, row):
+        '''It needs to understand when it is in the right row.
+           If the first is selected, so in row 1: there are self.c elements before it.
+           If in row 2, there are 2*self.c elements. So:
+        '''
+        min_i = (row) * (self.c)-1
+        max_i = (row+1)*self.c
+        list_element_row = []
+        for i,e in enumerate(self): #for all elements:
+            if row == 0:
+                if i<self.c:
+                    list_element_row.append(e)
+            elif row == self.c -1:
+                if i>min_i:
+                    list_element_row.append(e)
+            else:
+                if i > min_i and i<max_i:
+                    list_element_row.append(e)
+        #Now that it has the row, it has to find the first element which is not 0.
+        for elem in list_element_row:
+            if elem!=0:
+                return elem
+
+        #if here, there were only 0.
+        return None #No Pivot
+        
+            
+            
         
 #DETERMINANT
 def det_2x2(mat):
@@ -713,7 +791,7 @@ def square_linear_system(A,B):
 #
 #B = Matrix([1,3,0,4,1,6,0,3,1], 3, 1)
 #E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 2,3)
-#F = Matrix([10,6,133,5,13,7,5,6,4,8,123,465,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
+#F = Matrix([10,6,133,5,13,7,5,6,4,8,0,0,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
 #print(A)
 #print(B)
 #print(cramer_rule(A,B))
@@ -722,12 +800,12 @@ def square_linear_system(A,B):
 #print(A.inverse())
 #print(A+B)
 
-#print(B)
+#print(A)
 #print(B.cof_matrix())
 #print(B.inverse())
 #print(B+B)
 
-#print(E)
+#print(A)
 #print(E.cof_matrix())
 #print(E.inverse())
 #print(E+B)
@@ -741,13 +819,18 @@ def square_linear_system(A,B):
 
 #A = Matrix([1,1,0,1], 2,2)
 #B = Matrix([5,3],2,1)
-#print(A)
-#print(B)
+#print(E)
+#print()
 #print(square_linear_system(A,B))
 
+#print(B)
+#print(F)
 #print(E)
+#print(B.find_pivot(1))
+#A.find_pivot(1)
 
-#for i in E:
+#B.find_pivot(2)
+#B.find_pivot(1)
+#B.find_pivot(0)
+#for i in F:
     #print(i)
-
-
