@@ -49,7 +49,12 @@ LIST OF FUNCTIONS:
                 The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
                 Value is required.
                 It is the third elementary operation.
-                
+
+            - .elementary_op3_to0(rowtochange, row):
+                The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered. The value is the one that makes the pivot 0.
+                Value is not required.
+                It is the third elementary operation used in the gaussian elimination
+            
             - .sub(i,j):
                 The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
                 The matrix avoid taking elements with row_deleted or column deleted ad indices.
@@ -99,11 +104,30 @@ LIST OF FUNCTIONS:
             - .__next__():
                 The function update the iterator and return the element self.elem(i,j)
 
-            - len(Matrix):
+            -  len(Matrix):
                 The function returns the number of elements in the Matrix
 
             - .find_pivot(row):
                 The function returns the pivot of a selected row. A pivot is the first element != 0 of a row.
+                WARNING: i and j are not in the usual order. It is because i need to sort the list in other methods.
+
+            - .pivot_list():
+                The function return a list with all the pivots of the matrix and their indices. Example: [(j, i, val), (j2,i2, val2)...]
+                WARNING: i and j are not in the usual order. It is because i need to sort the list in other methods.
+            
+            - .is_triangular():
+                Check if the Matrix is or not triangular \|
+                Being triangular means that the pivot in a low j must be in low i.
+                It is not triangular if pivot are on the same column.
+            
+            - .sort()
+                The function sort the matrix in order to make it triangular
+                
+            - .pivot_before(row):
+                The function returns True if the pivot in the previous row is in the same column of the pivot of the selected row. Else: False.
+            
+            - .gaussian_elimination():
+                The function returns a matrix where it was done the Gaussian Elimination.
             
 SAMPLES:
 0) Import the module:
@@ -238,7 +262,31 @@ SAMPLES:
     >>> print(A.find_pivot(1)) 
     Output:
     4
-    
+
+18) Pivot List:
+    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
+    >>> print(A.pivot_list())
+    Output:
+    [(0, 0, 1), (0, 1, 3)]
+
+19) Sort a Matrix:
+    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
+    >>> print(A.sort())
+    Output:
+    0| 3     4     
+    1| 0     1     
+       --    --    
+       0     1
+       
+20) Gaussian Elimination:
+    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
+    >>> print(A.gaussian_elimination())
+    Output:
+    0| 5     1     3     
+    1| 0.000 2.600 -3.200 
+    2| 0.000 0.000 -7.077 
+       --    --    --    
+       0     1     2   
 '''
 
 class Matrix():
@@ -551,6 +599,34 @@ class Matrix():
             C.elem_change(rowtochange, j, (self.elem(rowtochange, j) + self.elem(row,j)*val))
         return C
 
+    def elementary_op3_to0(self, rowtochange, row):
+        '''
+        The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered. The value is the one that makes the pivot 0.
+        Value is not required.
+        It is the third elementary operation used in the gaussian elimination
+        '''
+        C = Matrix([], self.r, self.c)
+        for i in range(0, self.r):
+            for j in range(0, self.c):
+                C.elem_change(i, j, self.elem(i,j))
+        #C is now a copy of the A Matrix.
+
+        a = self.find_pivot(rowtochange)[0]
+        b = self.find_pivot(row)[0]
+        c = self.find_pivot(row)[2]
+        d = self.find_pivot(rowtochange)[2]
+        if a == b:
+            if (d>0 and c>0) or (d<0 and c<0):
+                for j in range(0, self.c):
+                    C.elem_change(rowtochange, j, (self.elem(rowtochange, j) - self.elem(row,j)*d/c))
+                return C
+            else:
+                for j in range(0, self.c):
+                    C.elem_change(rowtochange, j, (self.elem(rowtochange, j) - self.elem(row,j)*d/c))
+                return C
+        else:
+            return C
+
     def sub(self, row_deleted, column_deleted):
         """
         The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
@@ -641,18 +717,19 @@ class Matrix():
         else:
             raise StopIteration #if in the next iteration the number of rows is wrong, stop the iteration
 
-    #GAUSS
     def __len__(self):
         number = 0
         for i in self:
             number+=1
         return number
-            
+
+    #GAUSSIAN ELIMINATION and PIVOT
     def find_pivot(self, row):
-        '''It needs to understand when it is in the right row.
-           If the first is selected, so in row 1: there are self.c elements before it.
-           If in row 2, there are 2*self.c elements. So:
+        '''The function returns the pivot of the selected row.
+
+           WARNING: i and j are not in the usual order. It is because i need to sort the list in other methods.
         '''
+        j = -1 #because I have to increase, while starting from 0.
         min_i = (row) * (self.c)-1
         max_i = (row+1)*self.c
         list_element_row = []
@@ -668,15 +745,106 @@ class Matrix():
                     list_element_row.append(e)
         #Now that it has the row, it has to find the first element which is not 0.
         for elem in list_element_row:
+            j+=1
             if elem!=0:
-                return elem
-
-        #if here, there were only 0.
+                return (j, row, elem)
+        #if here, there were only 0 in that row.
         return None #No Pivot
+
+    def pivot_list(self):
+        '''The function return a list with all the pivots of the matrix and their indices. Example: [(j, i, val), (j2,i2, val2)...]
+           WARNING: i and j are not in the usual order. It is because i need to sort the list in other methods.
+        '''
+        pivot_list = []
+        for i in range(0,self.r):#for every row
+            pivot_list.append( self.find_pivot(i) )
+        return pivot_list
+    
+    def is_triangular(self):
+        '''Check if the Matrix is or not triangular \|
+           Being triangular means that the pivot in a lower j must be in low i.
+           It is not triangular if pivot are on the same column.
+        '''
+        # Example: [(0, 0, 10), (1, 0, 7), (2, 2, 15), (3, 0, 125), (4, 0, 5642)]
+        j_list = []
+        for i in self.pivot_list():
+            #for every pivot:
+            #extract the j's
+            j_list.append(i[1])
+        #now I have all the j
+
+        # now I sort it. If the result is different, it is not triangular.
+        new_list = sorted(j_list)
         
-            
-            
+        if sum(j_list) == j_list[0]*len(j_list): #It must not have same elements!!!
+            return False
+
+        for i in j_list:
+            number = j_list.count(i)
+            if number >1:
+                return False
         
+        return j_list==new_list
+
+    def sort(self):
+        ''' The function sort the matrix in order to make it triangular'''
+        #Copy the matrix
+        C = Matrix([],self.r, self.c)
+        for i in range(self.r):
+            for j in range(self.c):
+                C.elem_change(i,j, self.elem(i,j))
+                
+        #sort
+        list_pivot = self.pivot_list()
+        try:
+            sorted_list = sorted(list_pivot)
+        except:
+            print("Sorry. Not Possible")
+            return None
+        number = 0
+        for i,e in enumerate(sorted_list):
+            index = list_pivot.index(e)
+            if index != i:
+                number = number +1
+                C = C.elementary_op1(index, i)
+                hold = list_pivot[index]
+                list_pivot[index] = list_pivot[i]
+                list_pivot[i] = hold
+        return C
+
+    def pivot_before(self, row):
+        '''The function returns True if the pivot in the previous row is in the same column of the pivot of the selected row. Else: False.'''
+        if row==0: return False
+        else:
+            j_pivot = self.find_pivot(row)[0] #in the tuple take the j
+            j_pivot_before = self.find_pivot(row-1)[0]#in the row before, look where the pivot is
+            if j_pivot == j_pivot_before:
+                return True
+            else:
+                return False
+   
+    def gaussian_elimination(self):
+        '''
+        The function returns a matrix where it was done the Gaussian Elimination.
+        '''
+        #Make a copy
+        C = Matrix([],self.r, self.c)
+        for i in range(self.r):
+            for j in range(self.c):
+                C.elem_change(i,j, self.elem(i,j))
+        #Sort
+        try:    
+            C = C.sort()
+            for j in range(self.c):
+                for i in range(self.r): #for every row
+                    if C.pivot_before(i) == True:
+                        C = C.elementary_op3_to0(i, i-1)
+                        C = C.sort()
+            return C
+        except:
+            print("Sorry. Not Possible")
+            return None
+    
 #DETERMINANT
 def det_2x2(mat):
     """
@@ -782,55 +950,3 @@ def square_linear_system(A,B):
                     C.elem_change(i,j,Ai.elem(i,j))
             X = C * B
             return X
-            
-            
-    
-
-#TEST
-#A = Matrix([1,2,3,4,5,6,7,8,10],1,2)
-#
-#B = Matrix([1,3,0,4,1,6,0,3,1], 3, 1)
-#E = Matrix([1,2,"w",0.4,5,0,7,[2],9], 2,3)
-#F = Matrix([10,6,133,5,13,7,5,6,4,8,0,0,15,9,12,125,1,2,3,234,5642,9123,3,4,12345,123732,2],5,5)
-#print(A)
-#print(B)
-#print(cramer_rule(A,B))
-#print(square_linear_system(A,B))
-#print(A.cof_matrix())
-#print(A.inverse())
-#print(A+B)
-
-#print(A)
-#print(B.cof_matrix())
-#print(B.inverse())
-#print(B+B)
-
-#print(A)
-#print(E.cof_matrix())
-#print(E.inverse())
-#print(E+B)
-
-#print(F)
-#print(F.cof_matrix())
-#print(F.inverse())
-#print(F+B)
-#print(switch_columns(A, B, 0,0))
-#print(A)
-
-#A = Matrix([1,1,0,1], 2,2)
-#B = Matrix([5,3],2,1)
-#print(E)
-#print()
-#print(square_linear_system(A,B))
-
-#print(B)
-#print(F)
-#print(E)
-#print(B.find_pivot(1))
-#A.find_pivot(1)
-
-#B.find_pivot(2)
-#B.find_pivot(1)
-#B.find_pivot(0)
-#for i in F:
-    #print(i)
