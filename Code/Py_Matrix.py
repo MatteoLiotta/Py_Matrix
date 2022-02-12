@@ -138,9 +138,9 @@ LIST OF FUNCTIONS:
 #==============#
 class Matrix():
 
-    #-------------------#
+    #===================#
     # __init__() Method #
-    #-------------------#
+    #===================#
     def __init__(self, values_list=[], rows=2, columns=2):
         """ The function build a Matrix object. It requires a dataset, in order to put values inside the matrix. It also requires rows and columns, to correctly divide the dataset in sub-lists.
             Function check: The dataset must respect the exaxt possible number; user must enter rows*columns elements. Error is raised.
@@ -315,9 +315,9 @@ class Matrix():
         self.det = det_nxn(self)
 
 
-    #----------------------------------------#
+    #========================================#
     # CREATE A MATRIX: step 2) Divide a list #
-    #----------------------------------------#   
+    #========================================#   
     def divide_list(self, lista, minimo, massimo):
         '''
         Used to create lists for matrix rows
@@ -327,9 +327,9 @@ class Matrix():
             list.append(lista[i])
         return list
 
-    #-----------------#
+    #=================#
     # CREATE A MATRIX #
-    #-----------------#      
+    #=================#      
     def matrix_c(self, r_chosen = 0, c_chosen = 0):
         '''
         Build the matrix from data previously entered.
@@ -392,9 +392,9 @@ class Matrix():
         return matrix #return the list created
 
 
-    #--------------------------------------#
+    #======================================#
     # Get a specific element of the matrix #
-    #--------------------------------------#
+    #======================================#
     def elem(self, i, j):
         """
         Return a specific element of the matrix. User has to choose row and column, then the element in that row and column is returned.
@@ -402,9 +402,9 @@ class Matrix():
         elem=self.matrix[i][j] #select the element j in row i
         return elem #return that element
 
-    #-----------------------------------------#
+    #=========================================#
     # CHANGE a specific element of the matrix #
-    #-----------------------------------------#
+    #=========================================#
     def elem_change(self, i, j, value):
         """
         It changes a specific element of the matrix. User has to choose row and column, then the element in that row and column is changed whit the entered value.
@@ -413,9 +413,9 @@ class Matrix():
         self.matrix[i][j]=value
         return self
 
-    #------------------#
+    #==================#
     # PRINT the matrix #
-    #------------------#
+    #==================#
     def __str__(self):
         """
         Function used to print a matrix in order to make it more pretty
@@ -498,56 +498,108 @@ class Matrix():
                 k+=1
             print("")
             return ""
-            
+
+    #=======================#
+    # __add__() Method: SUM #
+    #=======================#       
     def __add__(self, other):
         """
         It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
         Matrix must have same rows and columns, if not, "None" is returned.
         """
-        try:
-            if self.r == other.r and self.c == other.c:
-                C = Matrix([],self.r, self.c)
-                for i in range(0, self.r):
-                    for j in range(0, self.c):
-                        #working with row i, column j
-                        C.elem_change(i,j, self.elem(i,j) + other.elem(i, j))
-                return C
-            else:
-                raise ValueError
-        except Exception as e:
-            print("Not possible to add two Matrix objects with different rows and columns")
+        #....................................#
+        # Check if they are Matrix instances #
+        #....................................#
+        if not isinstance(self, Matrix) or not isinstance(other, Matrix): #operation between Matrix and Matrix
             return None
         
+        #.............................................#
+        # If it is possible to sum element by element #
+        #.............................................#
+        try:
+            #................................................#
+            # If the number of rows and columns are the same #
+            #................................................#
+            if self.r == other.r and self.c == other.c:
+                #=== Instance ===#
+                C = Matrix([],self.r, self.c)
+                #================#
+
+                for i in range(0, self.r): #for every row
+                    for j in range(0, self.c): #for every columns (elements of rows)
+                        #............................................................#
+                        # Change the current element with the sum of the ij elements #
+                        #............................................................#
+                        C.elem_change(i,j, self.elem(i,j) + other.elem(i, j))
+                        
+                #=== Once done, return the Matrix ===#
+                return C
+                #====================================#
+            #................................................#
+            # If the number of rows and columns are the same #
+            #................................................#
+            else:
+                raise ValueError
+                #An exception is raised
+            
+        except Exception as e:
+            print("Not possible to add two Matrix objects with different rows and columns")
+            return None #None is returned.
+        
+    #==================================#
+    # __mul__() Method: MULTIPLICATION # [Between Matrix and Matrix or Matrix and a number]
+    #==================================#
     def __mul__(self, other):
         """
         Two possibilities: if 'other' is a number or if it is a matrix.
         - if other is a matrix, it uses the rule for this operation. So the operation returns the matrix obtained with the multiplication between matrix.
         - if other is not a matrix, but an integer or a floating point number, it multiplies every element of the matrix for the number.
         """
-        #MATRIX * MATRIX
+        #-----------------#
+        # MATRIX * MATRIX #
+        #-----------------#        
         if isinstance(self, Matrix) and isinstance(other, Matrix): #operation between Matrix and Matrix
             if self.c == other.r:
+                #=== Instance ===#
                 C = Matrix([], self.r, other.c) #create a matrix
-                for i in range(0, C.r):
-                    for j in range(0, other.c):
-                        sum_m = 0 #to store the sum
+                #================#
+                for i in range(0, C.r): #for every row
+                    for j in range(0, other.c): # for each column
+                        sum_m = 0 #to store the sum.
+
+                        #Another iteration on columns
+                        #.....................................#
+                        # Matrix multiplication by definition #
+                        #.....................................#
                         for k in range(0, self.c):
-                            a_ik = self.matrix[i][k] #self.elem(i,k)
-                            b_kj = other.matrix[k][j] #other.elem(k,j)
+                            a_ik = self.elem(i,k)
+                            b_kj = other.elem(k,j)
                             sum_m = sum_m + (a_ik * b_kj)
+                        #=== Update elements of the Instance ===#
                         C.elem_change(i, j, sum_m)
+                        #=======================================#
+                #Once done, return
                 return C
             else:
                 print("Must respect columns and rows rule. A*B is possible if A.c == B.r. None is returned")
                 return None
 
-        #MATRIX * NUMBER
-        if isinstance(self, Matrix)==True and (isinstance(other, int) or isinstance(other, float))==True: #operation between int or float and Matrix
+        #-----------------#
+        # MATRIX * NUMBER #
+        #-----------------#  
+        if isinstance(self, Matrix) and (isinstance(other, int) or isinstance(other, float)): #operation between Matrix and (int or float)
+
+            #=== Instance ===#
             C = Matrix([], self.r, self.c) #create a matrix
-            for i in range(0, self.r):
-                for j in range(0, self.c):
+            #================#
+            for i in range(0, self.r): #For each row
+                for j in range(0, self.c): #Iteration on elements of the row
+                    #............................................#
+                    # Matrix scalar multiplication by definition # [Each element is multiplied by the number]
+                    #............................................#
                     C.elem_change(i,j, other*self.elem(i,j))
             return C
+        
     def t(self):
         """
         The function returns a new matrix which is the transpose of the given matrix. The transpose matrix is define by definition as:
