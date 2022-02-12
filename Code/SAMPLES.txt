@@ -1,0 +1,184 @@
+Here some help and samples about the Py_Matrix Module.
+======================================================
+
+------------
+| SAMPLES: |
+------------
+0) Import the module:
+---------------------
+    >>> import Py_Matrix as py_m
+    
+1) Create a Matrix from a dataset:
+----------------------------------
+    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
+    
+2) Print a Matrix:
+------------------
+    >>> print(A) #A previously declared
+    Output:
+    0| 1     2     
+    1| 3     4     
+       --    --
+       0     1
+
+3) Print an element of the matrix, knowing row and column:
+----------------------------------------------------------
+    WARNING: the first row is number 0, same as first column. It does not starts with 1
+    >>> print(A.elem(1,0) #A previously declared
+    Output: 3
+
+4) Add two Matrix (Matrix + Matrix):
+------------------------------------
+    WARNING: Matrix must have same rows and columns
+    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
+    >>> B = py_m.Matrix([4,3,2,1], 2, 2)
+    >>> print(A+B)
+    Output:
+    0| 5     5     
+    1| 5     5     
+       --    --
+       0     1
+
+5) Matrix * Matrix:
+-------------------
+    WARNING: Matrix multiplication is not commutative
+    >>>print(A*B) #A and B previously declared
+    Output:
+    0| 8     5     
+    1| 20    13    
+       --    --    
+       0     1 
+    
+6) Matrix * number:
+-------------------
+    WARNING: 2*A is not implemented.
+    >>> print(A*2) #A and B previously declared
+    Output:
+    0| 2     4     
+    1| 6     8     
+       --    --    
+       0     1   
+7) Transpose of a Matrix:
+-------------------------
+    >>> print(A.t()) #A previously declared
+    Output:
+    0| 1     3     
+    1| 2     4     
+       --    --    
+       0     1 
+8) Elementary operation 3:
+--------------------------
+    >>> A.elementary_op3(0,1,-3)
+    Then:
+    0| 1           2     
+    1| 3+(1)*(-3)  4+(2)*(-3)
+       --          --    
+       0           1
+    Output:
+    0| 1     2     
+    1| 0     -2    
+       --    --    
+       0     1
+
+9) Submatrix of a matrix:
+-------------------------
+    >>> print(A.sub(0,0)) #A previously declared
+    Output:
+    0| 4       
+       --   
+       0
+
+10) Determinant of a matrix (2 ways):
+-------------------------------------
+    1)
+    >>> print(A.det)
+    #return a number
+
+    2)
+    >>> print(det_nxn(A))
+
+    Better to use 1) instead of 2)
+
+11) Cofactor of a Matrix:
+-------------------------
+    #deleting the element in (0,0)
+    >>> print(A.cofactor(0,0)) #A previously declared
+    Output: 4
+
+12) Inverse Matrix:
+-------------------
+    >>> print(A.inverse()) #A previously declared
+    Output:
+    0| -2.000 1.000 
+    1| 1.500 -0.500 
+       --    --    
+       0     1  
+    
+13) Cramer Rule on Linear System:
+---------------------------------
+    >>> B = Matrix([4,3],2,1)
+    >>> print(cramer_rule(A,B)) #A previously declared
+    Output:
+    0| -5.000 
+    1| 4.500 
+       --    
+       0
+14) Matrix Infromations:
+------------------------
+    >>> A.info() #A previously declared
+
+15) Matrix Iteration:
+---------------------
+    >>> for i in A: #A previously declared as Matrix([1,2,3,4],2,2)
+            print(i)
+    Output:
+    1
+    2
+    3
+    4
+
+16) Lenght:
+-----------
+    >>> print(len(A)) #A previously declared as Matrix([1,2,3,4],2,2)
+    Output:
+    4
+
+17) Find Pivot:
+---------------
+    >>> print(A) #A previously declared as Matrix([1,2,0,4],2,2)
+    Output:
+    0| 1     2     
+    1| 0     4    
+       --    --    
+       0     1
+    >>> print(A.find_pivot(1)) 
+    Output:
+    4
+
+18) Pivot List:
+---------------
+    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
+    >>> print(A.pivot_list())
+    Output:
+    [(0, 0, 1), (0, 1, 3)]
+
+19) Sort a Matrix:
+------------------
+    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
+    >>> print(A.sort())
+    Output:
+    0| 3     4     
+    1| 0     1     
+       --    --    
+       0     1
+       
+20) Gaussian Elimination:
+-------------------------
+    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
+    >>> print(A.gaussian_elimination())
+    Output:
+    0| 5     1     3     
+    1| 0.000 2.600 -3.200 
+    2| 0.000 0.000 -7.077 
+       --    --    --    
+       0     1     2   
