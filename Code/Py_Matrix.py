@@ -1,11 +1,14 @@
 '''
+=====================================================================================
 Py_Matrix
-----------
+==========
 Module for matrix creation and matrix manipulation.
 Matrix are made as object class while metods are for matrix calculus and properties.
 ----------
 Github: https://github.com/MatteoLiotta/Py_Matrix
 ----------
+Author: Matteo Liotta, 2022
+=====================================================================================
 
 LIST OF FUNCTIONS:
             - .matrix_c([elements], rows, columns):
@@ -128,181 +131,45 @@ LIST OF FUNCTIONS:
             
             - .gaussian_elimination():
                 The function returns a matrix where it was done the Gaussian Elimination.
-            
-SAMPLES:
-0) Import the module:
-    >>> import Py_Matrix as py_m
-    
-1) Create a Matrix from a dataset:
-    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
-    
-2) Print a Matrix:
-    >>> print(A) #A previously declared
-    Output:
-    0| 1     2     
-    1| 3     4     
-       --    --
-       0     1
-
-3) Print an element of the matrix, knowing row and column:
-    WARNING: the first row is number 0, same as first column. It does not starts with 1
-    >>> print(A.elem(1,0) #A previously declared
-    Output: 3
-
-4) Add two Matrix (Matrix + Matrix):
-    WARNING: Matrix must have same rows and columns
-    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
-    >>> B = py_m.Matrix([4,3,2,1], 2, 2)
-    >>> print(A+B)
-    Output:
-    0| 5     5     
-    1| 5     5     
-       --    --
-       0     1
-
-5) Matrix * Matrix:
-    WARNING: Matrix multiplication is not commutative
-    >>>print(A*B) #A and B previously declared
-    Output:
-    0| 8     5     
-    1| 20    13    
-       --    --    
-       0     1 
-    
-6) Matrix * number
-    WARNING: 2*A is not implemented.
-    >>> print(A*2) #A and B previously declared
-    Output:
-    0| 2     4     
-    1| 6     8     
-       --    --    
-       0     1   
-7) Transpose of a Matrix:
-    >>> print(A.t()) #A previously declared
-    Output:
-    0| 1     3     
-    1| 2     4     
-       --    --    
-       0     1 
-8) Elementary operation 3:
-    >>> A.elementary_op3(0,1,-3)
-    Then:
-    0| 1           2     
-    1| 3+(1)*(-3)  4+(2)*(-3)
-       --          --    
-       0           1
-    Output:
-    0| 1     2     
-    1| 0     -2    
-       --    --    
-       0     1
-
-9) Submatrix of a matrix:
-    >>> print(A.sub(0,0)) #A previously declared
-    Output:
-    0| 4       
-       --   
-       0
-
-10) Determinant of a matrix (2 ways)
-    1)
-    >>> print(A.det)
-    #return a number
-
-    2)
-    >>> print(det_nxn(A))
-
-    Better to use 1) instead of 2)
-
-11) Cofactor of a Matrix:
-    #deleting the element in (0,0)
-    >>> print(A.cofactor(0,0)) #A previously declared
-    Output: 4
-
-12) Inverse Matrix:
-    >>> print(A.inverse()) #A previously declared
-    Output:
-    0| -2.000 1.000 
-    1| 1.500 -0.500 
-       --    --    
-       0     1  
-    
-13) Cramer Rule on Linear System:
-    >>> B = Matrix([4,3],2,1)
-    >>> print(cramer_rule(A,B)) #A previously declared
-    Output:
-    0| -5.000 
-    1| 4.500 
-       --    
-       0
-14) Matrix Infromations:
-    >>> A.info() #A previously declared
-
-15) Matrix Iteration:
-    >>> for i in A: #A previously declared as Matrix([1,2,3,4],2,2)
-            print(i)
-    Output:
-    1
-    2
-    3
-    4
-
-16) Lenght:
-    >>> print(len(A)) #A previously declared as Matrix([1,2,3,4],2,2)
-    Output:
-    4
-
-17) Find Pivot:
-    >>> print(A) #A previously declared as Matrix([1,2,0,4],2,2)
-    Output:
-    0| 1     2     
-    1| 0     4    
-       --    --    
-       0     1
-    >>> print(A.find_pivot(1)) 
-    Output:
-    4
-
-18) Pivot List:
-    >>> A = py_m.Matrix([1,2,3,4], 2, 2)
-    >>> print(A.pivot_list())
-    Output:
-    [(0, 0, 1), (0, 1, 3)]
-
-19) Sort a Matrix:
-    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
-    >>> print(A.sort())
-    Output:
-    0| 3     4     
-    1| 0     1     
-       --    --    
-       0     1
-       
-20) Gaussian Elimination:
-    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
-    >>> print(A.gaussian_elimination())
-    Output:
-    0| 5     1     3     
-    1| 0.000 2.600 -3.200 
-    2| 0.000 0.000 -7.077 
-       --    --    --    
-       0     1     2   
 '''
 
+#==============#
+# Class Matrix #
+#==============#
 class Matrix():
+
+    #-------------------#
+    # __init__() Method #
+    #-------------------#
     def __init__(self, values_list=[], rows=2, columns=2):
         """ The function build a Matrix object. It requires a dataset, in order to put values inside the matrix. It also requires rows and columns, to correctly divide the dataset in sub-lists.
             Function check: The dataset must respect the exaxt possible number; user must enter rows*columns elements. Error is raised.
             Dataset type must be a list. Error is eventually raised.
         """
-        #Check rows and columns type:
+        #..............................#
+        # Check rows and columns type: #
+        #..............................#
+        #I must check for the type of the input. Rows and Columns must be integer. If not, an error is not raised, they are set as 2 instead.
+        
         if type(rows)!=int or type(columns)!=int: #their type must be integer. If not, are assigned as 2  
             rows=2
             columns=2
         else:
             pass
         
-        #Check: dataset type
+        #..............................#
+        #       Check data type:       #
+        #..............................#
+        #The data, the list of element used in the matrix creation, must respect some rules:
+        # - Must be a list 
+        # - All the elements must be integers or float.
+        #If not ok in some point, the current element is set as 0.
+
+        #..............................#
+        # Check if it is not a list:   #
+        #..............................#
+        #If not, a flag is 'activated'
+        
         value_type = True #it is a list = True. Variable used for check the type of the dataset
         try:
             if type(values_list)!=list: #if it is not a list
@@ -310,43 +177,147 @@ class Matrix():
                 #raise TypeError
         except Exception as e:
             print("You must list type for the dataset. Error:", e)
-            
-        #Check: lenght of the dataset. Must be rows*columns or minus
-        try:
-            if value_type!=False: #so, it is a list
-                for i,e in enumerate(values_list): #change values, if not correct
-                    if type(e)!=int or type(e)==list:
-                        if type(e) == float:
-                            pass
-                        else:
-                            values_list[i]=0
-                if len(values_list)!=(rows*columns): #it is a list but it has not enough elements
-                    adding_list = []
-                    for t in range(len(values_list), rows*columns):
-                        adding_list.append(0)
-                    values_list = values_list+adding_list #do create a list, which has n-k elements - those that are missing
-                    #raise ValueError
-                #if it is like [[1,2],[3,4]], it is a matrix: all 0. Must enter a list [n,...,k]
-            else: #it is not a list or it is not correct. It creates a list
-                adding_list = []
-                for t in range(0, rows*columns):
-                    adding_list.append(0)
-                values_list = adding_list
-        except Exception as e:
-            print("The dataset was missing, not correct or not enought long. It has been completed or created. The dataset is now:", self.v,". Error:", e)
-        
 
-        #after all the data-check, it is possible to create the variables.
+        #................................#
+        # Check lenght of the list data: #
+        #................................#
+        #Check: lenght of the dataset. Must be rows*columns or minus
+        if value_type!=False: #so, it is a list
+            for i,e in enumerate(values_list): #change values, if not correct
+                #for every element
+                    
+                if type(e)!=int or type(e)==list: #check if it is not and integer
+                    #...........................................#
+                    # If element is not a int? if it is a list? #
+                    #...........................................#
+                        
+                    if type(e) == float:
+                        #..............................#
+                        # It may be a float. If it is: #
+                        #..............................#
+                        pass
+                        #No prolem
+                    else:
+                        #......................#
+                        # Not int, not a float #
+                        #......................#
+
+                        if isinstance(e, str):
+                            #..............................#
+                            # It may be a float in str:    #
+                            #..............................#
+                            if "." in e:
+                                try:
+                                    values_list[i] = float(e)
+                                    continue
+                                except:
+                                    values_list[i]=0 #it is changed in 0
+                                    continue
+
+                            #..............................#
+                            # It may be an integer in str: #
+                            #..............................#
+                            if not "." in e:
+                                try:
+                                    values_list[i] = int(e)
+                                    continue
+                                except:
+                                    values_list[i]=0 #it is changed in 0
+                                    continue
+
+                            #........................#
+                            # Can't help it no more  # [Must be set as 0]
+                            #........................#
+                            else:
+                                values_list[i] = 0
+                                continue
+                                
+                        if isinstance(e, list):
+                            #..........................................#
+                            # It may be a number in str in len=1 list: #
+                            #..........................................#
+                            if len(e) == 1 and isinstance(e[0], str):
+                                if "." in e[0]:
+                                    try:
+                                        values_list[i] = float(e[0])
+                                        continue
+                                    except:
+                                        values_list[i]=0 #it is changed in 0
+                                        continue
+
+                                if not "." in e:
+                                    try:
+                                        values_list[i] = int(e[0])
+                                        continue
+                                    except:
+                                        values_list[i]=0 #it is changed in 0
+                                        continue
+                                        
+                            #...................................#
+                            # It may be a number in len=1 list: #
+                            #...................................#
+                            if len(e) == 1 and isinstance(e[0], int):
+                                #................#
+                                # If an integer: #
+                                #................#
+                                values_list[i] = int(e[0])
+                                continue
+                                
+                            if len(e) == 1 and isinstance(e[0], float):
+                                #.............#
+                                # If a float: #
+                                #.............#
+                                values_list[i] = float(e[0])
+                                continue
+                            else:
+                                values_list[i] = 0
+                        else:
+                            values_list[i] = 0
+
+                            
+            if len(values_list)!=(rows*columns): #it is a list but it has not enough elements
+                #...............................#
+                # Not enought elements in data: #
+                #...............................#
+                #I must add the number of elements that are required (Based on the number of rows and columns
+                #If it is like [1,2] with rows: 2, columnss: 2 --> [0,0] ==> [1,2] + [0,0] = [1,2,0,0] ==> Ok!
+                    
+                adding_list = []
+                for t in range(len(values_list), rows*columns): #For (rows*columns - len( 'data' )) times
+                    adding_list.append(0) #append 0 to the tmp list
+
+                #Once built the list, append it to dataset
+                values_list = values_list+adding_list #do create a list, which has n-k elements - those that are missing
+                    
+                
+        else: #it is not a list or it is not correct. It creates a list
+            #.................................#
+            # Not a list. Create a list of 0: #
+            #.................................#
+            adding_list = []
+            for t in range(0, rows*columns): #for rows*columns times add 0 to the tmp list
+                adding_list.append(0)
+            values_list = adding_list #dataset is [0,0,0,0,...,0]
+        
+        #....................................#
+        # Once all corrected: SELF VARIABLES #
+        #....................................#
+        #after all the data-check, it is possible to create the self variables.
         self.v = values_list
         self.r = rows
         self.c = columns
         self.matrix = self.matrix_c()
 
+        #.............................#
+        # Something more: Determinant #
+        #.............................#
         #determinant
         self.det = det_nxn(self)
-        
-        #print(self.v, self.r, self.c, self.matrix)
 
+
+    #----------------------------------------#
+    # CREATE A MATRIX: step 2) Divide a list #
+    #----------------------------------------#   
     def divide_list(self, lista, minimo, massimo):
         '''
         Used to create lists for matrix rows
@@ -355,7 +326,10 @@ class Matrix():
         for i in range(minimo, massimo):
             list.append(lista[i])
         return list
-            
+
+    #-----------------#
+    # CREATE A MATRIX #
+    #-----------------#      
     def matrix_c(self, r_chosen = 0, c_chosen = 0):
         '''
         Build the matrix from data previously entered.
@@ -368,10 +342,10 @@ class Matrix():
 
         For the process are also used valoremin and valoremax, in order to correctly cut the dataset.
         The cut is made, for a 3x3, with dataset: [1,2,3,4,5,6,7,8,9]
-                    1 2 3 | 4   5 6 | 7     8 9
-            index   0 1 2 | 3   4 5 | 6     7 8
-            so:     0       0+c     0+c+c
-        Then valoremin (minimum) is the 0 at the beginning, and valoremax (maximum) is exactly 3, as the counter cont. Divide_list cuts from 0 to 3-1 (range exclude 1)
+                    1  2  3 ||  4   5  6 || 7   8  9
+            index   0  1  2 ||  3   4  5 || 6   7  8
+            so:     0          0+c         0+c+c
+        Then valoremin (minimum) is the 0 at the beginning, and valoremax (maximum) is exactly 3, as the counter cont. Divide_list cuts from 0 to 3-1 (range excludes 1)
         Then when the function has to re-cut the dataset, valoremin is self.c (columns) * cicliannullamento (a counter that counts the times that the function has cutted the dataset).
         So, in this case, it is 3 * 1 = 3. Then it starts from 3 (as index) to valoremax, which is now 6. The function cuts from 3 to 5 (6-1 because of the range) and creates [3,4,5].
         And so on.
@@ -393,7 +367,7 @@ class Matrix():
             if r_chosen ==1 and c_chosen == 1: #if it is 1x1
                 return [[self.v[0]]]
             
-        
+        #======== Usefull Variables ==========#
         self.matrix = []
         cont = 0
         list_tmp = []
@@ -401,6 +375,9 @@ class Matrix():
         valoremin = 0
         valoremax = 0
         cicliannullamento = 0
+        #=====================================#
+
+        
         while(len(matrix)<r_chosen): #until the number of rows is not as declared
             if cont<c_chosen: #common case -> no cut
                 cont+=1
@@ -414,6 +391,10 @@ class Matrix():
                 matrix.append(self.divide_list(self.v, valoremin, valoremax ))
         return matrix #return the list created
 
+
+    #--------------------------------------#
+    # Get a specific element of the matrix #
+    #--------------------------------------#
     def elem(self, i, j):
         """
         Return a specific element of the matrix. User has to choose row and column, then the element in that row and column is returned.
@@ -421,6 +402,9 @@ class Matrix():
         elem=self.matrix[i][j] #select the element j in row i
         return elem #return that element
 
+    #-----------------------------------------#
+    # CHANGE a specific element of the matrix #
+    #-----------------------------------------#
     def elem_change(self, i, j, value):
         """
         It changes a specific element of the matrix. User has to choose row and column, then the element in that row and column is changed whit the entered value.
@@ -428,38 +412,78 @@ class Matrix():
         """
         self.matrix[i][j]=value
         return self
-    
+
+    #------------------#
+    # PRINT the matrix #
+    #------------------#
     def __str__(self):
         """
         Function used to print a matrix in order to make it more pretty
         """
         if len(self.matrix)>1: #it must have at least 2 rows.
-            for i in range(0, self.r):
-                print(i, end="| ")
-                for j in range(0, self.c):
+            #......................................#
+            # If the len of the list of list is >1 # [It has at least 2 rows]
+            #......................................#
+
+            for i in range(0, self.r): #For all the rows: (Not used list iteration cause the self.matrix is not always updated. Must b fixed)
+                print(i, end="| ") #Print the beginning, like: 1|
+                for j in range(0, self.c): #For all the elements in each row
+                    
                     if type(self.elem(i,j))==float:
+                        #.............................#
+                        # If an element is a float:   #
+                        #.............................#
                         print("%-5.3f" %(self.matrix[i][j]), end=" ")
                     else:
+                        #.....................#
+                        # If it is a integer: #
+                        #.....................#
                         print("%-5d" %(self.matrix[i][j]), end=" ")
-                print("")
-            print("   ", end="")
+                        
+                print("") # Go to the next line
+                
+            print("   ", end="") #Create space between columns indices.
+
+            #........................................#
+            # Columns Indices at the end and spaces: #
+            #........................................#
+            #=== Spaces and lines ===#
             for u in range(0, self.c):
                 print("--"+4*" ", end="")
             print("")
             print("   ", end="")
             k=0
+
+            #=== Numbers and indices ===#
             while (k<self.c):
                 print(k, end="     ")
                 k+=1
             print("")
             return ""
+
+        
         else: #it only has a row. So, it is like: [[a,b,c,d,...,z]]
+            #...................................#
+            # There is only a row in the matrix #
+            #...................................#
             print("0|", end =" ")
-            for j in range(0, self.c):
+            for j in range(0, self.c): #Must only iterate on the number of columns. Row == 1
                 if type(self.elem(0,j))==float:
-                        print("%-5.3f" %(self.matrix[0][j]), end=" ")
+                    #..........................................#
+                    # Same as before: if an element is a float #
+                    #..........................................#
+                    print("%-5.3f" %(self.matrix[0][j]), end=" ")
+                    
                 else:
+                    #............................................#
+                    # Same as before: if an element is a integer #
+                    #............................................#
                     print("%-5d" %(self.matrix[0][j]), end=" ")
+
+            #........................................#
+            # Columns Indices at the end and spaces: #
+            #........................................#
+            #=== Spaces and lines ===#
             print("")
             print("   ", end="")
             for u in range(0, self.c):
@@ -467,6 +491,8 @@ class Matrix():
             print("")
             print("   ", end="")
             k=0
+
+            #=== Numbers and indices ===#
             while (k<self.c):
                 print(k, end="     ")
                 k+=1
