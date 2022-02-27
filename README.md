@@ -128,7 +128,7 @@ You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/P
 
 ### SAMPLES
 ------
-1) Import the module:_ 
+1) _Import the [module](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py):_ 
    ```
    >>> import Py_Matrix as py_m 
    ```
