@@ -1,14 +1,16 @@
 '''
-=====================================================================================
-Py_Matrix
-==========
-Module for matrix creation and matrix manipulation.
-Matrix are made as object class while metods are for matrix calculus and properties.
-----------
-Github: https://github.com/MatteoLiotta/Py_Matrix
-----------
-Author: Matteo Liotta, 2022
-=====================================================================================
+#===================================================================================#
+  Py_Matrix
+  ==========
+  Module for matrix creation and matrix manipulation.
+  Matrix are made as object class while metods are for matrix calculus and properties.
+|-----------------------------------------------------------------------------------|
+  Project Repository on GitHub: https://github.com/MatteoLiotta/Py_Matrix
+|-----------------------------------------------------------------------------------|
+  Author: Matteo Liotta, 2022
+|-----------------------------------------------------------------------------------|
+  License: https://github.com/MatteoLiotta/Py_Matrix/blob/main/LICENSE
+#===================================================================================#
 
 LIST OF FUNCTIONS:
             - .matrix_c([elements], rows, columns):
@@ -413,6 +415,10 @@ class Matrix():
         self.matrix[i][j]=value
         return self
 
+    def update_matrix(self):
+        matx_list = [i for i in self]
+        return Matrix(matx_list, self.r, self.c)
+            
     #==================#
     # PRINT the matrix #
     #==================#
@@ -533,7 +539,7 @@ class Matrix():
                         C.elem_change(i,j, self.elem(i,j) + other.elem(i, j))
                         
                 #=== Once done, return the Matrix ===#
-                return C
+                return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
                 #====================================#
             #................................................#
             # If the number of rows and columns are the same #
@@ -579,7 +585,7 @@ class Matrix():
                         C.elem_change(i, j, sum_m)
                         #=======================================#
                 #Once done, return
-                return C
+                return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
             else:
                 print("Must respect columns and rows rule. A*B is possible if A.c == B.r. None is returned")
                 return None
@@ -598,8 +604,11 @@ class Matrix():
                     # Matrix scalar multiplication by definition # [Each element is multiplied by the number]
                     #............................................#
                     C.elem_change(i,j, other*self.elem(i,j))
-            return C
-        
+            return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
+
+    #==================#
+    # Transpose Matrix #
+    #==================#
     def t(self):
         """
         The function returns a new matrix which is the transpose of the given matrix. The transpose matrix is define by definition as:
@@ -607,43 +616,72 @@ class Matrix():
             tAij = Aji
         So the transpose switches the index of the original matrix. The new matrix is returned. Original matrix is not changed.
         """
+        #=== Instance ===#
         C = Matrix([], self.c, self.r) #because it will have switched self.matrix indices, c and r are switched.
+        #================#
+
         for i in range(0, self.r):
                 for j in range(0, self.c):
+                    #..........................................................#
+                    # Transpose Matrix by definition - Change (i,j) with (j,i) #
+                    #..........................................................#
                     C.elem_change(j,i, self.elem(i,j)) #Change C element with (j,i) from self.matrix. [Elements of C were originally set as 0 with declaration]
-        return C
+        return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #=========================#
+    # ELEMENTARY OPERATION: 1 # [Switch]
+    #=========================#
     def elementary_op1(self, row1, row2):
         """
         The function returns a Matrix where row1 and row2 of self are switched.
         It is the first elementary operation.
         """
+        #=== Instance ===#
         C = Matrix([], self.r, self.c)
+        #================#
+
+        #.............................#
+        # Create a copy of the matrix #
+        #.............................#
         for i in range(0, self.r):
             for j in range(0, self.c):
                 C.elem_change(i, j, self.elem(i,j))
         #C is now a copy of the A Matrix.
-
-        hold = C.matrix[row1]
-        C.matrix[row1] = C.matrix[row2]
+ 
+        hold = C.matrix[row1] #hold the row not to be deleted
+        C.matrix[row1] = C.matrix[row2] #changes the rows
         C.matrix[row2] = hold
-        return C
-    
+        
+        return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
+
+    #=========================#
+    # ELEMENTARY OPERATION: 2 # [Multiply by a number]
+    #=========================#
     def elementary_op2(self, row, val):
         """
         The function returns a Matrix where row1 of self is multiplied by a chosen number.
         It is the second elementary operation.
         """
+        #=== Instance ===#
         C = Matrix([], self.r, self.c)
+        #================#
+
+        #.............................#
+        # Create a copy of the matrix #
+        #.............................#
         for i in range(0, self.r):
             for j in range(0, self.c):
                 C.elem_change(i, j, self.elem(i,j))
         #C is now a copy of the A Matrix.
 
         for j in range(0, self.c): #for each column
-            C.elem_change(row, j, val*C.elem(row, j))
-        return C
+            C.elem_change(row, j, val*C.elem(row, j)) #Multiply all elements by a value
+            
+        return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #=========================#
+    # ELEMENTARY OPERATION: 3 # [Add a multiple of a row element by element]
+    #=========================#
     def elementary_op3(self, rowtochange, row, val):
         """
         The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered.
@@ -667,7 +705,12 @@ class Matrix():
            --    --    
            0     1
         """
+        #=== Instance ===#
         C = Matrix([], self.r, self.c)
+        #================#
+        #.............................#
+        # Create a copy of the matrix #
+        #.............................#
         for i in range(0, self.r):
             for j in range(0, self.c):
                 C.elem_change(i, j, self.elem(i,j))
@@ -675,15 +718,24 @@ class Matrix():
 
         for j in range(0, self.c):
             C.elem_change(rowtochange, j, (self.elem(rowtochange, j) + self.elem(row,j)*val))
-        return C
+        return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #=========================#
+    # ELEMENTARY OPERATION: 3 # [Operation 3 in order to obtain 0 in the rowtochange as value under the pivot of row]
+    #=========================#
     def elementary_op3_to0(self, rowtochange, row):
         '''
         The function returns a Matrix where every element of rowtochange is added with a multiple (val) of the row entered. The value is the one that makes the pivot 0.
         Value is not required.
         It is the third elementary operation used in the gaussian elimination
         '''
+        #=== Instance ===#
         C = Matrix([], self.r, self.c)
+        #================#
+
+        #.............................#
+        # Create a copy of the matrix #
+        #.............................#
         for i in range(0, self.r):
             for j in range(0, self.c):
                 C.elem_change(i, j, self.elem(i,j))
@@ -697,14 +749,17 @@ class Matrix():
             if (d>0 and c>0) or (d<0 and c<0):
                 for j in range(0, self.c):
                     C.elem_change(rowtochange, j, (self.elem(rowtochange, j) - self.elem(row,j)*d/c))
-                return C
+                return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
             else:
                 for j in range(0, self.c):
                     C.elem_change(rowtochange, j, (self.elem(rowtochange, j) - self.elem(row,j)*d/c))
-                return C
+                return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
         else:
-            return C
+            return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #===========#
+    # Submatrix #
+    #===========#
     def sub(self, row_deleted, column_deleted):
         """
         The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
@@ -712,45 +767,66 @@ class Matrix():
         The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
         To unify cases, it will all be done in the second way.
         """
-        list_sub = []
+
+        list_sub = [] #list to store the elements
         for i in range(0, self.r):
             for j in range(0, self.c):
-                if i != row_deleted and j != column_deleted:
-                    list_sub.append(self.elem(i,j))
+                if i != row_deleted and j != column_deleted: #avoiding 'deleted' row and column elements
+                    list_sub.append(self.elem(i,j)) #append to the list
+        #=== Instance ===#
         C = Matrix(list_sub, self.r-1, self.c-1)
-        return C
+        #================#
+        return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #======================#
+    # Cofactor of a Matrix #
+    #======================#
     def cofactor(self, row, column):
         """
         The function returns the cofactor of a matrix, using definition.
         """
         return ((-1)**(row+column))*det_nxn(self.sub(row,column))
 
+    #=================#
+    # Cofactor Matrix #
+    #=================#
     def cof_matrix(self):
         """
         The function return the cofactor matrix, obtained changing each element (i,j) with the cofactor (i,j).
         It uses the cofactor matrix definition.
         """
+        #=== Instance ===#
         C = Matrix([], self.r, self.c)
+        #================#
         for i in range(self.r):
             for j in range(self.c):
-                C.elem_change(i,j, self.cofactor(i,j))
-        return C
+                C.elem_change(i,j, self.cofactor(i,j)) #create a matrix where each element is the relative cofactor.
+        return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #================#
+    # Inverse Matrix #
+    #================#
     def inverse(self):
         """
         Using the definition for the inverse of a matrix (tcof(A)*1/detA), the function returns the inverse of the matrix
         """
         if self.det!=0:
+            #.............................#
+            # If the determinant is not 0 #
+            #.............................#
             C = self.cof_matrix() #C is the cofactor matrix of matrix A
             tC = C.t() #tC is the transpose of the cofactor matrix of matrix A
-            a = 1/self.det
+            a = 1/self.det #to store the reciprocal value of the determinant
             for i in range(self.r):
                 for j in range(self.c):
-                    tC.elem_change(i,j,tC.elem(i,j)*a)
-            return tC
+                    #tC.elem_change(i,j,tC.elem(i,j)*a) #multiply the tC by a
+                    tC = tC * a
+            return tC.update_matrix() #To be sure, instead of tC, it returns a matrix instance
         return None
-    
+
+    #==============================#
+    # Information about the matrix #
+    #==============================#
     def info(self):
         """
         The function print all relevant informations about the matrix.
@@ -777,67 +853,85 @@ class Matrix():
             print(self.cof_matrix())
         return None
 
+    #==============================#
+    # __iter__() Method: Iteration #
+    #==============================# 
     def __iter__(self):
         '''It makes the matrix iterable'''
         self.iter_i=0
         self.iter_j=0
         return self
-        
+
+    #==============================#
+    # __next__() Method: Iteration #
+    #==============================#      
     def __next__(self):
         '''It returns the element and update the iterator'''
         if self.iter_i<self.r: #check for possible errors
+            #...........................#
+            # Result (will be returned) #
+            #...........................#
             result = self.elem(self.iter_i, self.iter_j) #the result is the element in the relative row and column
+
+            #.........................#
+            # Ready for the next call #
+            #.........................#
             self.iter_j+=1 #while result stores the element, I must prepare the iterator for the next call. Add 1 to the column iterator
+            #.........................#
+            # Must go in the next row #
+            #.........................#
             if self.iter_j>=self.c: #if bigger or equal to the number of columns - so it reaches the end of the row
                 self.iter_i+=1 #change row
                 self.iter_j=0 #go back to 0
             return result #when everything is ready, return
         else:
+            #..............................#
+            # No more rows - STOPITERATION #
+            #..............................#
             raise StopIteration #if in the next iteration the number of rows is wrong, stop the iteration
 
+    #=================================#
+    # __len__() Method: Matrix length #
+    #=================================# 
     def __len__(self):
+        ''' The function returns the number of elements of the matrix '''
         number = 0
         for i in self:
             number+=1
         return number
 
     #GAUSSIAN ELIMINATION and PIVOT
+    
+    #==================================#
+    # Find the pivot of a selected row #
+    #==================================# 
     def find_pivot(self, row):
         '''The function returns the pivot of the selected row.
 
            WARNING: i and j are not in the usual order. It is because i need to sort the list in other methods.
         '''
-        j = -1 #because I have to increase, while starting from 0.
-        min_i = (row) * (self.c)-1
-        max_i = (row+1)*self.c
-        list_element_row = []
-        for i,e in enumerate(self): #for all elements:
-            if row == 0:
-                if i<self.c:
-                    list_element_row.append(e)
-            elif row == self.c -1:
-                if i>min_i:
-                    list_element_row.append(e)
-            else:
-                if i > min_i and i<max_i:
-                    list_element_row.append(e)
-        #Now that it has the row, it has to find the first element which is not 0.
-        for elem in list_element_row:
-            j+=1
-            if elem!=0:
-                return (j, row, elem)
-        #if here, there were only 0 in that row.
-        return None #No Pivot
+        for i,e in enumerate(self.matrix[row]): #the matrix is a list of lists
+            if e == 0: #if the element is a 0, nothing to do
+                continue
+            else: #if there is a value != 0, it is a pivot. It returns.
+                return (i, row, e)
+        return None #If here, there is no pivot for that row
 
+    #========================#
+    # Pivot list of a matrix #
+    #========================# 
     def pivot_list(self):
         '''The function return a list with all the pivots of the matrix and their indices. Example: [(j, i, val), (j2,i2, val2)...]
            WARNING: i and j are not in the usual order. It is because i need to sort the list in other methods.
         '''
         pivot_list = []
-        for i in range(0,self.r):#for every row
-            pivot_list.append( self.find_pivot(i) )
+        for i,e in enumerate(self.matrix):#for every row
+            pivot_list.append(self.find_pivot(i)) #add to the list the pivot of the row i
         return pivot_list
-    
+
+    #=================================#
+    # Is the matrix upper triangular? #
+    #=================================# 
     def is_triangular(self):
         '''Check if the Matrix is or not triangular \|
            Being triangular means that the pivot in a lower j must be in low i.
@@ -862,68 +956,135 @@ class Matrix():
             if number >1:
                 return False
         
-        return j_list==new_list
+        return j_list==new_list #True or False
 
+    #===========================================#
+    # Sort a matrix to make it upper triangular #
+    #===========================================# 
     def sort(self):
         ''' The function sort the matrix in order to make it triangular'''
-        #Copy the matrix
+        #=== Instance ===#
         C = Matrix([],self.r, self.c)
+        #================#
+
+        #.............................#
+        # Create a copy of the matrix #
+        #.............................#
         for i in range(self.r):
             for j in range(self.c):
                 C.elem_change(i,j, self.elem(i,j))
-                
-        #sort
+
         list_pivot = self.pivot_list()
+        
         try:
+            #...................................................#
+            # If it is possible to sort, obtain the sorted list #
+            #...................................................#
             sorted_list = sorted(list_pivot)
         except:
+            #...............................#
+            # If it is not possible to sort #
+            #...............................#
             print("Sorry. Not Possible")
             return None
+        
         number = 0
         for i,e in enumerate(sorted_list):
+            #...........................................#
+            # For each element of the sorted pivot list #
+            #...........................................#
             index = list_pivot.index(e)
             if index != i:
                 number = number +1
+                #........................#
+                # Elementary operation 1 #
+                #........................#
                 C = C.elementary_op1(index, i)
+                
                 hold = list_pivot[index]
                 list_pivot[index] = list_pivot[i]
                 list_pivot[i] = hold
-        return C
+                
+        return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #========================================================================#
+    # There is a pivot in the same column in two subsequent rows? True/False #
+    #========================================================================# 
     def pivot_before(self, row):
         '''The function returns True if the pivot in the previous row is in the same column of the pivot of the selected row. Else: False.'''
+        #..........................#
+        # If there is only one row #
+        #..........................#
         if row==0: return False
         else:
+            #.....................#
+            # If there are 2 rows #
+            #.....................#
             j_pivot = self.find_pivot(row)[0] #in the tuple take the j
             j_pivot_before = self.find_pivot(row-1)[0]#in the row before, look where the pivot is
+            
             if j_pivot == j_pivot_before:
+                #.............................#
+                # If the columns are the same #
+                #.............................#
                 return True
             else:
+                #..................................................#
+                # If the columns are the same or the pivot is None #
+                #..................................................#
                 return False
-   
+
+    #===========================================================#
+    # GAUSSIAN ELIMINATION - Matrix --> Upper Triangular Matrix #
+    #===========================================================# 
     def gaussian_elimination(self):
         '''
         The function returns a matrix where it was done the Gaussian Elimination.
         '''
-        #Make a copy
+        #=== Instance ===#
         C = Matrix([],self.r, self.c)
+        #================#
+
+        #.............................#
+        # Create a copy of the matrix #
+        #.............................#
         for i in range(self.r):
             for j in range(self.c):
                 C.elem_change(i,j, self.elem(i,j))
-        #Sort
-        try:    
+        
+        try:
+            #......................................#
+            # If possible to sort, sort the matrix #
+            #......................................#
             C = C.sort()
             for j in range(self.c):
                 for i in range(self.r): #for every row
+                    #.............................#
+                    # For each element of the row #
+                    #.............................#
                     if C.pivot_before(i) == True:
+                        #..............................................................#
+                        # If there is a pivot in the same column of the subsequent row #
+                        #..............................................................#
                         C = C.elementary_op3_to0(i, i-1)
                         C = C.sort()
-            return C
+                        
+            return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
+        
         except:
+            #......................#
+            # If an error occurred #
+            #......................#
             print("Sorry. Not Possible")
             return None
-    
+
+
+
 #DETERMINANT
+
+#=============================#
+# Determinant of a 2x2 Matrix #
+#=============================#
 def det_2x2(mat):
     """
     The function returns the determinant of a matrix 2x2.
@@ -932,6 +1093,10 @@ def det_2x2(mat):
     """
     if isinstance(mat, Matrix): #mat must be a Matrix
         if mat.c==mat.r and mat.c == 2: #mat must be 2x2
+            #......................#
+            # If the matrix is 2x2 #
+            #......................#
+            #Using the definition:
             det_mat = 1*(mat.elem(0,0)*mat.elem(1,1)) + (-1)*(mat.elem(1,0)*mat.elem(0,1))
             return det_mat
         else:
@@ -941,6 +1106,9 @@ def det_2x2(mat):
         #print("Not a Matrix")
         return None
 
+#=============================#
+# Determinant of a nxn Matrix #
+#=============================#
 def det_nxn(mat):
     """
     The function returns the determinant of a matrix.
@@ -951,16 +1119,36 @@ def det_nxn(mat):
     """
     if isinstance(mat, Matrix): #mat must be a matrix
         if mat.c == mat.r: #mat must be a square matrix
+            #...............................#
+            # If the matrix a square matrix #
+            #...............................#
+
+            #=== BASE CASE ===#
             if mat.c == 2: return det_2x2(mat) #BASE CASE for the recursion
             if mat.c == 1: return int(mat.elem(0,0)) #if 1x1, the determinant is a number: it is the element of the 1x1 matrix
-            else: #FORMULA
+            #=================#
+
+            #=== RECURSION ===#
+            else:
                 somma = 0
                 i = 0
+                #...........................................#
+                # Iteration - j from 0 to number of columns #
+                #...........................................#
                 for j in range (0, mat.c): #Iteration: row = 0, column = (0 to self.c-1)
+                    #.................#
+                    # Laplace Formula #
+                    #.................#
                     C = mat.sub(i,j) #C is a submatrix obtained deleting the row i and column j
                     add = mat.elem(i, j)*((-1)**(i+j))*det_nxn(C) #cofactor calcolus, used in the following expression
+                    #--- add the result to the variable ---#
                     somma = somma + add
+
+                #...............................................#
+                # Once finished the iteration, return the value #
+                #...............................................#
                 return somma
+            #=================#
         else:
             #print("Matrix is not a square matrix")
             return None
@@ -975,19 +1163,35 @@ def switch_columns(A,B, column_A, column_from_B):
     """
     if isinstance(A, Matrix) and isinstance(B, Matrix):
         if A.r == B.r:
-            #Create C as a copy of A
+            #.......................................#
+            # If A has the same number of rows of B #
+            #.......................................#
+            #=== Instance ===#
             C = Matrix([], A.r, A.c)
+            #================#
+
+            #.............................#
+            # Create a copy of the matrix #
+            #.............................#
             for i in range(A.r):
                 for j in range(A.c):
                     C.elem_change(i,j,A.elem(i,j))
+            
             for i in range(A.r):
                 for j in range(A.c):
                     if j == column_A:
+                        #...........................#
+                        # If in the selected column #
+                        #...........................#
                         C.elem_change(i,j, B.elem(i, column_from_B))
-            return C
+                        
+            return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
+        
         else:
+            #Not possible to switch
             return None
     else:
+        #Not a matrix
         return None
 
 def cramer_rule(A,B):
@@ -997,20 +1201,36 @@ def cramer_rule(A,B):
     """
     if isinstance(A, Matrix) and isinstance(B, Matrix):
         if A.det!=0 and B.c==1 :
-            list_x = []
-            #Create C as a copy of A
+            #........................................#
+            # If det of A is not 0 and B is a column #
+            #........................................#
+            #=== Instance ===#
             C = Matrix([], A.r, A.c)
+            #================#
+
+            #.............................#
+            # Create a copy of the matrix #
+            #.............................#
             for i in range(A.r):
                 for j in range(A.c):
                     C.elem_change(i,j,A.elem(i,j))
-            #for each row
+            
+            #for each column
+                    
+            #..........................................#
+            # Obtaining the dataset for the new matrix #
+            #..........................................#
+            list_x = []
             for j in range(A.c):
                 a = switch_columns(A,B, j, 0) #a is the matrix obtained switching the j row of A, whit B
                 list_x.append((det_nxn(a)/A.det)) #x_i is det(a)/det(A) for all i
+                
+            #=== Instance ===#
             X = Matrix(list_x, A.r, 1) #X is the matrix made of the results obtained during the iteration
-            return X
-        else: return None
-    else: return None
+            #================#
+            return X.update_matrix() #To be sure, instead of X, it returns a matrix instance
+        else: return None #Not possible
+    else: return None #Not a matrix
 
 def square_linear_system(A,B):
     """
@@ -1020,11 +1240,8 @@ def square_linear_system(A,B):
     """
     if isinstance(A, Matrix) and isinstance(B, Matrix):
         if A.det!=0 and B.c ==1:
-            #Create C as a copy of A.inverse()
-            C = Matrix([], A.r, A.c)
             Ai = A.inverse()
-            for i in range(A.r):
-                for j in range(A.c):
-                    C.elem_change(i,j,Ai.elem(i,j))
-            X = C * B
-            return X
+            #=== Rule: X=A^-1 * B ===#
+            X = Ai * B
+            #========================#
+            return X.update_matrix() #To be sure, instead of X, it returns a matrix instance
