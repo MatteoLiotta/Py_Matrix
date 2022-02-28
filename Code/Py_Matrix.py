@@ -426,46 +426,59 @@ class Matrix():
         """
         Function used to print a matrix in order to make it more pretty
         """
+        self.string = ""
         if len(self.matrix)>1: #it must have at least 2 rows.
             #......................................#
             # If the len of the list of list is >1 # [It has at least 2 rows]
             #......................................#
 
             for i in range(0, self.r): #For all the rows: (Not used list iteration cause the self.matrix is not always updated. Must b fixed)
-                print(i, end="| ") #Print the beginning, like: 1|
+                #print(i, end="| ") #Print the beginning, like: 1|
+                self.string += "{}| ".format(i) 
                 for j in range(0, self.c): #For all the elements in each row
                     
                     if type(self.elem(i,j))==float:
                         #.............................#
                         # If an element is a float:   #
                         #.............................#
-                        print("%-5.3f" %(self.matrix[i][j]), end=" ")
+                        #print("%-5.3f" %(self.matrix[i][j]), end=" ")
+                        self.string +="%-5.3f "%self.matrix[i][j]
                     else:
                         #.....................#
                         # If it is a integer: #
                         #.....................#
-                        print("%-5d" %(self.matrix[i][j]), end=" ")
+                        #print("%-5d" %(self.matrix[i][j]), end=" ")
+                        self.string +="%-5d "%self.matrix[i][j]
                         
-                print("") # Go to the next line
+                #print("") # Go to the next line
+                self.string +="\n"
                 
-            print("   ", end="") #Create space between columns indices.
+            #print("   ", end="") #Create space between columns indices.
+            self.string +="   "
 
             #........................................#
             # Columns Indices at the end and spaces: #
             #........................................#
             #=== Spaces and lines ===#
             for u in range(0, self.c):
-                print("--"+4*" ", end="")
-            print("")
-            print("   ", end="")
+                #print("--"+4*" ", end="")
+                self.string +="--    "
+            #print("")
+            self.string +="\n"
+            #print("   ", end="")
+            self.string +="   "
             k=0
 
             #=== Numbers and indices ===#
             while (k<self.c):
-                print(k, end="     ")
+                #print(k, end="     ")
+                self.string += "{}     ".format(k)
                 k+=1
-            print("")
-            return ""
+            #print("")
+            self.string += "\n"
+
+            #print(self.string)
+            return self.string
 
         
         else: #it only has a row. So, it is like: [[a,b,c,d,...,z]]
