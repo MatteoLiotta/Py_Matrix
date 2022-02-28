@@ -485,38 +485,48 @@ class Matrix():
             #...................................#
             # There is only a row in the matrix #
             #...................................#
-            print("0|", end =" ")
+            #print("0|", end =" ")
+            self.string += "0| "
             for j in range(0, self.c): #Must only iterate on the number of columns. Row == 1
                 if type(self.elem(0,j))==float:
                     #..........................................#
                     # Same as before: if an element is a float #
                     #..........................................#
-                    print("%-5.3f" %(self.matrix[0][j]), end=" ")
+                    #print("%-5.3f" %(self.matrix[0][j]), end=" ")
+                    self.string +="%-5.3f "%self.matrix[0][j]
                     
                 else:
                     #............................................#
                     # Same as before: if an element is a integer #
                     #............................................#
-                    print("%-5d" %(self.matrix[0][j]), end=" ")
+                    #print("%-5d" %(self.matrix[0][j]), end=" ")
+                    self.string +="%-5d "%self.matrix[0][j]
 
             #........................................#
             # Columns Indices at the end and spaces: #
             #........................................#
             #=== Spaces and lines ===#
-            print("")
-            print("   ", end="")
+            #print("")
+            self.string += "\n"
+            #print("   ", end="")
+            self.string += "   "
             for u in range(0, self.c):
-                print("--"+4*" ", end="")
-            print("")
-            print("   ", end="")
+                #print("--"+4*" ", end="")
+                self.string +="--    "
+            #print("")
+            self.string +="\n"
+            #print("   ", end="")
+            self.string +="   "
             k=0
 
             #=== Numbers and indices ===#
             while (k<self.c):
-                print(k, end="     ")
+                #print(k, end="     ")
+                self.string += "{}     ".format(k)
                 k+=1
-            print("")
-            return ""
+            #print("")
+            self.string += "\n"
+            return self.string
 
     #=======================#
     # __add__() Method: SUM #
