@@ -436,19 +436,35 @@ class Matrix():
                 #print(i, end="| ") #Print the beginning, like: 1|
                 self.string += "{}| ".format(i) 
                 for j in range(0, self.c): #For all the elements in each row
-                    
-                    if type(self.elem(i,j))==float:
-                        #.............................#
-                        # If an element is a float:   #
-                        #.............................#
-                        #print("%-5.3f" %(self.matrix[i][j]), end=" ")
-                        self.string +="%-5.3f "%self.matrix[i][j]
+                    if j == self.c -1:
+                        #...............................#
+                        # If it is the last of the line # [It should not have the 5 spaces]
+                        #...............................#
+                        if type(self.elem(i,j))==float:
+                            #.............................#
+                            # If an element is a float:   #
+                            #.............................#
+                            #print("%-5.3f" %(self.matrix[i][j]), end=" ")
+                            self.string +="%.3f"%self.matrix[i][j]
+                        else:
+                            #.....................#
+                            # If it is a integer: #
+                            #.....................#
+                            #print("%-5d" %(self.matrix[i][j]), end=" ")
+                            self.string +="%d"%self.matrix[i][j]
                     else:
-                        #.....................#
-                        # If it is a integer: #
-                        #.....................#
-                        #print("%-5d" %(self.matrix[i][j]), end=" ")
-                        self.string +="%-5d "%self.matrix[i][j]
+                        if type(self.elem(i,j))==float:
+                            #.............................#
+                            # If an element is a float:   #
+                            #.............................#
+                            #print("%-5.3f" %(self.matrix[i][j]), end=" ")
+                            self.string +="%-5.3f "%self.matrix[i][j]
+                        else:
+                            #.....................#
+                            # If it is a integer: #
+                            #.....................#
+                            #print("%-5d" %(self.matrix[i][j]), end=" ")
+                            self.string +="%-5d "%self.matrix[i][j]
                         
                 #print("") # Go to the next line
                 self.string +="\n"
@@ -461,6 +477,9 @@ class Matrix():
             #........................................#
             #=== Spaces and lines ===#
             for u in range(0, self.c):
+                if u == self.c -1: #If it is the last one it should not have spaces
+                    self.string +="--"
+                    break #the subsequent line is avoided
                 #print("--"+4*" ", end="")
                 self.string +="--    "
             #print("")
@@ -471,6 +490,9 @@ class Matrix():
 
             #=== Numbers and indices ===#
             while (k<self.c):
+                if k==self.c -1: #If it is the last one it should not have spaces
+                    self.string += "{}".format(k)
+                    break #the subsequent lines are avoided
                 #print(k, end="     ")
                 self.string += "{}     ".format(k)
                 k+=1
@@ -488,19 +510,35 @@ class Matrix():
             #print("0|", end =" ")
             self.string += "0| "
             for j in range(0, self.c): #Must only iterate on the number of columns. Row == 1
-                if type(self.elem(0,j))==float:
-                    #..........................................#
-                    # Same as before: if an element is a float #
-                    #..........................................#
-                    #print("%-5.3f" %(self.matrix[0][j]), end=" ")
-                    self.string +="%-5.3f "%self.matrix[0][j]
-                    
+                if j == self.c -1:
+                    #...............................#
+                    # If it is the last of the line # [It should not have the 5 spaces]
+                    #...............................#
+                    if type(self.elem(0,j))==float:
+                        #.............................#
+                        # If an element is a float:   #
+                        #.............................#
+                        #print("%-5.3f" %(self.matrix[i][j]), end=" ")
+                        self.string +="%.3f"%self.matrix[0][j]
+                    else:
+                        #.....................#
+                        # If it is a integer: #
+                        #.....................#
+                        #print("%-5d" %(self.matrix[i][j]), end=" ")
+                        self.string +="%d"%self.matrix[0][j]
                 else:
-                    #............................................#
-                    # Same as before: if an element is a integer #
-                    #............................................#
-                    #print("%-5d" %(self.matrix[0][j]), end=" ")
-                    self.string +="%-5d "%self.matrix[0][j]
+                    if type(self.elem(0,j))==float:
+                        #.............................#
+                        # If an element is a float:   #
+                        #.............................#
+                        #print("%-5.3f" %(self.matrix[i][j]), end=" ")
+                        self.string +="%-5.3f "%self.matrix[0][j]
+                    else:
+                        #.....................#
+                        # If it is a integer: #
+                        #.....................#
+                        #print("%-5d" %(self.matrix[i][j]), end=" ")
+                        self.string +="%-5d "%self.matrix[0][j]
 
             #........................................#
             # Columns Indices at the end and spaces: #
@@ -511,6 +549,9 @@ class Matrix():
             #print("   ", end="")
             self.string += "   "
             for u in range(0, self.c):
+                if u == self.c -1: #If it is the last one it should not have spaces
+                    self.string +="--"
+                    break #the subsequent line is avoided
                 #print("--"+4*" ", end="")
                 self.string +="--    "
             #print("")
@@ -522,6 +563,9 @@ class Matrix():
             #=== Numbers and indices ===#
             while (k<self.c):
                 #print(k, end="     ")
+                if k==self.c -1: #If it is the last one it should not have spaces
+                    self.string += "{}".format(k)
+                    break #the subsequent lines are avoided
                 self.string += "{}     ".format(k)
                 k+=1
             #print("")
