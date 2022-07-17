@@ -3,12 +3,14 @@
 
 ![image](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Picture%20(For%20Readme%20file)/Py_Matrix%20image.png)
 
-### FILE:
--------
-You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py)
+|`Project Repository` on GitHub: https://github.com/MatteoLiotta/Py_Matrix|
+|----------------------------------------------------------------------------------------|
+|`Author`: Matteo Liotta, 2022|
+|`File`: [Py_Matrix.py](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py)|
+|`License`: [License](https://github.com/MatteoLiotta/Py_Matrix/blob/main/LICENSE)|
 
-### LIST OF FUNCTIONS:
--------
+
+#### LIST OF FUNCTIONS:
  >- **.matrix_c(\[elements\], rows, columns):**\
  >   creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
 
@@ -123,11 +125,10 @@ You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/P
 >    The function returns True if the pivot in the previous row is in the same column of the pivot of the selected row. Else: False.
             
 >- **.gaussian_elimination()**:\
->    The function returns a matrix where it was done the Gaussian Elimination.
+>    The function returns a matrix where it was done the Gaussian Elimination.|
 
 
-### SAMPLES
-------
+#### SAMPLES:
 1) _Import the [module](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py):_ 
    ```
    >>> import Py_Matrix as py_m 
@@ -358,7 +359,3 @@ You can find the file .py here: [Py_Matrix.py](https://github.com/MatteoLiotta/P
        0     1     2   
     ```
     
-
-#### LICENSE
-------
-> You can find license here: [LICENSE](https://github.com/MatteoLiotta/Py_Matrix/blob/main/LICENSE)
