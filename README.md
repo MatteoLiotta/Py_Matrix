@@ -155,7 +155,7 @@
 >- **.from_str_to_num(self)**:\
 >    Method to convert a String Matrix in a Matrix
 
->- **str_det_nxn(mat, row, col)**:\ 
+>- **str_det_nxn(mat, row, col)**:\
 >    Determinant of a string matrix. It returns a string, using the Laplace Formula.
 
 #### SAMPLES:
