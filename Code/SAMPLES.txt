@@ -182,3 +182,10 @@ Here some help and samples about the Py_Matrix Module.
     2| 0.000 0.000 -7.077 
        --    --    --    
        0     1     2   
+       
+21) Characteristic Polynomial:
+------------------------------
+    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
+    >>> print(A.characteristic_polynomial())
+    Output:
+    '(((0+-x)*(4+-x)) + (-1)*((3+0)*(1+0)))'
