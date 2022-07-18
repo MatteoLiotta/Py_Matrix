@@ -209,7 +209,7 @@
 6) _Matrix * Matrix:_ 
    > WARNING: Matrix multiplication is not commutative
    ```
-   >>>print(A\*B) #A and B previously declared
+   >>>print(A*B) #A and B previously declared
    ```
    > Output:
    ```
@@ -220,9 +220,9 @@
    ```
    
 7) _Matrix * number:_ 
-   > WARNING: 2\*A is not implemented.
+   > WARNING: 2*A is not implemented.
    ```
-   >>> print(A\*2) #A and B previously declared
+   >>> print(A*2) #A and B previously declared
    ```
    > Output:
    ```
@@ -270,7 +270,7 @@
 11) _Determinant of a matrix (2 ways)_ 
     ```
     >>> print(A.det) #it returns determinant as a number
-    >>> print(det_nxn(A)) #it returns determinant a number
+    >>> print(det_nxn(A)) #it returns determinant as a number
     ```
     > Output:
     ```
