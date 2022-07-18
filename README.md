@@ -133,7 +133,7 @@
 >- **.from_num_to_str(self)**:\
 >    Method to convert a Matrix in a String Matrix
 
->- **.Characteristic_Polynomial()**:\
+>- **.characteristic_polynomial()**:\
 >    Method that returns the str version of the C. Poly. from  a Numerical Matrix.
 
 ##### String_Matrix
@@ -145,7 +145,7 @@
 >- **.def sub(self, row_deleted, column_deleted)**:\
 >    The function returns a string sub matrix.
                 
->- **.Characteristic_Polynomial(self)**:\
+>- **.characteristic_polynomial(self)**:\
 >    The function returns the Char. Polynomial of a string matrix. It is required a string Matrix, in order to let there be variables.
 >    The function is returned as a string.
 
