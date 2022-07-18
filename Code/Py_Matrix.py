@@ -141,7 +141,7 @@ LIST OF FUNCTIONS:
             - .from_num_to_str(self):
                 Method to convert a Matrix in a String Matrix
 
-            - .Characteristic_Polynomial()
+            - .characteristic_polynomial()
                 Method that returns the str version of the C. Poly. from  a Numerical Matrix.
 
         STRING MATRIX:
@@ -152,7 +152,7 @@ LIST OF FUNCTIONS:
             - .def sub(self, row_deleted, column_deleted):
                 The function returns a string sub matrix.
                 
-            - .Characteristic_Polynomial(self):
+            - .characteristic_polynomial(self):
                 The function returns the Char. Polynomial of a string matrix. It is required a string Matrix, in order to let there be variables.
                 The function is returned as a string.
 
@@ -1190,9 +1190,9 @@ class Matrix():
         return C.update_matrix()
 
     #=====================================#
-    # Characteristic_Polynomial of Matrix #
+    # characteristic_polynomial of Matrix #
     #=====================================# 
-    def Characteristic_Polynomial(self):
+    def characteristic_polynomial(self):
         '''
         ...........................
          Characteristic Polynomial 
@@ -1206,7 +1206,7 @@ class Matrix():
          3. Compute the determinant on that matrix
          4. Obtain the string function. It is the Characteristic Polynomial of the numerical Matrix
         '''
-        self.C_Polynomial = self.str_matrix.Characteristic_Polynomial()
+        self.C_Polynomial = self.str_matrix.characteristic_polynomial()
         return self.C_Polynomial
 
 
@@ -1707,7 +1707,7 @@ class String_Matrix(Matrix):
                         pass
 
         self.str_matrix = self
-        self.C_Polynomial = self.str_matrix.Characteristic_Polynomial()
+        self.C_Polynomial = self.str_matrix.characteristic_polynomial()
         return C.update_matrix()
 
 
@@ -1745,7 +1745,7 @@ class String_Matrix(Matrix):
         C.matrix = list_sub
         return C.update_matrix()
 
-    def Characteristic_Polynomial(self):
+    def characteristic_polynomial(self):
         ''' By definition, PA = det(A-xIn) '''
         min_xIn = String_Matrix([], self.r, self.c)
         # In is now all zeros
@@ -1761,11 +1761,11 @@ class String_Matrix(Matrix):
     def check_C_Poly(self):
         ''' Function to check if the C. Poly. is correct. It uses the determinant and the C. Poly, with x = 0. '''
         #print("POLYNOMIAL")
-        #print(self.Characteristic_Polynomial())
-        #print(eval(self.Characteristic_Polynomial(), {"x":0}), type(eval(self.Characteristic_Polynomial(), {"x":0})))
+        #print(self.characteristic_polynomial())
+        #print(eval(self.characteristic_polynomial(), {"x":0}), type(eval(self.characteristic_polynomial(), {"x":0})))
         #print("DETERMINANT")
         #print(eval(str_det_nxn(self, self.r, self.c)))
-        return (eval(self.Characteristic_Polynomial(), {"x":0}) == eval(str_det_nxn(self, self.r, self.c)))
+        return (eval(self.characteristic_polynomial(), {"x":0}) == eval(str_det_nxn(self, self.r, self.c)))
 
 
 #=============================#
@@ -1779,7 +1779,7 @@ def str_det_nxn(mat, row, col):
     In case of a 1x1 matrix, is returned the element (0,0) of the matrix.
     The result is a string, in order to let there be variables without errors.
     """
-    print(mat)
+    #print(mat)
     #=== BASE CASE ===#
     if col == 1: return mat.elem(0,0) #if 1x1, the determinant is a number: it is the element of the 1x1 matrix
     if row == 2: return "((({})*({})) + (-1)*(({})*({})))".format(mat.elem(0,0), mat.elem(1,1), mat.elem(1,0),mat.elem(0,1)) #((mat[0][0]*mat[1][1]) + (-1)*(mat[1][0]*mat[0][1])) #BASE CASE for the recursion - det2x2
