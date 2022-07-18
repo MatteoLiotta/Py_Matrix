@@ -9,10 +9,14 @@
 |-----------------------------------------------------------------------------------|
   Author: Matteo Liotta, 2022
 |-----------------------------------------------------------------------------------|
+  Updated on 07/18/2022 
+|-----------------------------------------------------------------------------------|
   License: https://github.com/MatteoLiotta/Py_Matrix/blob/main/LICENSE
 #===================================================================================#
 
 LIST OF FUNCTIONS:
+
+        MATRIX
             - .matrix_c([elements], rows, columns):
                 creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
                 
@@ -133,6 +137,34 @@ LIST OF FUNCTIONS:
             
             - .gaussian_elimination():
                 The function returns a matrix where it was done the Gaussian Elimination.
+                
+            - .from_num_to_str(self):
+                Method to convert a Matrix in a String Matrix
+
+            - .Characteristic_Polynomial()
+                Method that returns the str version of the C. Poly. from  a Numerical Matrix.
+
+        STRING MATRIX:
+            - Function from Matrix, changed in order to let there be variables.
+            - .__add__(self, other):from_str_to_num(self):
+                The function returns a string Matrix where the elements are the sum of the strings, with "+"
+                Example: "3"+"+"+"4" --> "3+4"
+            - .def sub(self, row_deleted, column_deleted):
+                The function returns a string sub matrix.
+                
+            - .Characteristic_Polynomial(self):
+                The function returns the Char. Polynomial of a string matrix. It is required a string Matrix, in order to let there be variables.
+                The function is returned as a string.
+
+            - .check_C_Poly(self):
+                A function used for testing
+
+            - .from_str_to_num(self):
+                Method to convert a String Matrix in a Matrix
+            
+            - str_det_nxn(mat, row, col): 
+                Determinant of a string matrix. It returns a string, using the Laplace Formula.
+            
 '''
 
 #==============#
@@ -315,6 +347,8 @@ class Matrix():
         #.............................#
         #determinant
         self.det = det_nxn(self)
+
+        self.str_matrix = self.from_num_to_str()
 
 
     #========================================#
@@ -831,7 +865,7 @@ class Matrix():
         """
         The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
         The matrix avoid taking elements with row_deleted or column deleted ad indices.
-        The submatrix number of row and coulmns is, if nxn, the sqrt of the number of rows (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
+        The submatrix number of row and coulmns is, if nxn, the sqrt of the number of elements (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
         To unify cases, it will all be done in the second way.
         """
 
@@ -1145,6 +1179,36 @@ class Matrix():
             print("Sorry. Not Possible")
             return None
 
+    #========================================#
+    # FROM NUMERICAL MATRIX TO STRING MATRIX #
+    #========================================# 
+    def from_num_to_str(self):
+        C = String_Matrix([], self.r, self.c)
+        for i in range(self.r):
+            for j in range(self.c):
+                C.elem_change(i,j, self.elem(i,j))
+        return C.update_matrix()
+
+    #=====================================#
+    # Characteristic_Polynomial of Matrix #
+    #=====================================# 
+    def Characteristic_Polynomial(self):
+        '''
+        ...........................
+         Characteristic Polynomial 
+        ...........................
+         In order to make it possible, I've created a sub-class for String Matrix.
+         From that it was simpler to compute the C. Poly. using a particular determinant function, based on Laplace.
+         It was the same function used in the numerical Matrix class, but using strings.
+         So, it was only needed to:
+         1. Convert the numerical matrix to a string matrix
+         2. Add to that matrix (-xIn)
+         3. Compute the determinant on that matrix
+         4. Obtain the string function. It is the Characteristic Polynomial of the numerical Matrix
+        '''
+        self.C_Polynomial = self.str_matrix.Characteristic_Polynomial()
+        return self.C_Polynomial
+
 
 
 #DETERMINANT
@@ -1312,3 +1376,435 @@ def square_linear_system(A,B):
             X = Ai * B
             #========================#
             return X.update_matrix() #To be sure, instead of X, it returns a matrix instance
+
+
+
+# ========================================================================================================================================= #
+
+
+
+class String_Matrix(Matrix):
+    '''
+    Class for string matrix, in order to compute the Characteristic Polynomial.
+    WARNING: The class is based on Matrix, so it might be possible to use function of the parent class. Those function might cause error.
+    '''
+
+    #===================#
+    # __init__() Method #
+    #===================#
+    def __init__(self, values_list=[], rows=2, columns=2):
+        """ The function build a Matrix object. It requires a dataset, in order to put values inside the matrix. It also requires rows and columns, to correctly divide the dataset in sub-lists.
+            Function check: The dataset must respect the exaxt possible number; user must enter rows*columns elements. Error is raised.
+            Dataset type must be a list. Error is eventually raised.
+        """
+        #..............................#
+        # Check rows and columns type: #
+        #..............................#
+        #I must check for the type of the input. Rows and Columns must be integer. If not, an error is not raised, they are set as 2 instead.
+        
+        if type(rows)!=int or type(columns)!=int: #their type must be integer. If not, are assigned as 2  
+            rows=2
+            columns=2
+        else:
+            pass
+        
+        #..............................#
+        #       Check data type:       #
+        #..............................#
+        #The data, the list of element used in the matrix creation, must respect some rules:
+        # - Must be a list 
+        # - All the elements must be integers or float.
+        #If not ok in some point, the current element is set as 0.
+
+        #..............................#
+        # Check if it is not a list:   #
+        #..............................#
+        #If not, a flag is 'activated'
+        
+        value_type = True #it is a list = True. Variable used for check the type of the dataset
+        try:
+            if type(values_list)!=list: #if it is not a list
+                value_type=False #the variable is set as False.
+                #raise TypeError
+        except Exception as e:
+            print("You must list type for the dataset. Error:", e)
+
+        #................................#
+        # Check lenght of the list data: #
+        #................................#
+        #Check: lenght of the dataset. Must be rows*columns or minus
+        if value_type!=False: #so, it is a list
+            for i,e in enumerate(values_list): #change values, if not correct
+                #for every element
+
+                if type(e)!=str:
+                    values_list[i] = str(e)
+                else:
+                    values_list[i] = str(e)
+                            
+            if len(values_list)!=(rows*columns): #it is a list but it has not enough elements
+                #...............................#
+                # Not enought elements in data: #
+                #...............................#
+                #I must add the number of elements that are required (Based on the number of rows and columns
+                #If it is like [1,2] with rows: 2, columnss: 2 --> [0,0] ==> [1,2] + [0,0] = [1,2,0,0] ==> Ok!
+                    
+                adding_list = []
+                for t in range(len(values_list), rows*columns): #For (rows*columns - len( 'data' )) times
+                    adding_list.append("0") #append 0 to the tmp list
+
+                #Once built the list, append it to dataset
+                values_list = values_list+adding_list #do create a list, which has n-k elements - those that are missing
+                    
+                
+        else: #it is not a list or it is not correct. It creates a list
+            #.................................#
+            # Not a list. Create a list of 0: #
+            #.................................#
+            adding_list = []
+            for t in range(0, rows*columns): #for rows*columns times add 0 to the tmp list
+                adding_list.append("0")
+            values_list = adding_list #dataset is [0,0,0,0,...,0]
+        
+        #....................................#
+        # Once all corrected: SELF VARIABLES #
+        #....................................#
+        #after all the data-check, it is possible to create the self variables.
+        self.v = values_list
+        self.r = rows
+        self.c = columns
+        self.matrix = self.matrix_c()
+
+
+    #========================================#
+    # CREATE A MATRIX: step 2) Divide a list #
+    #========================================#   
+    def divide_list(self, lista, minimo, massimo):
+        '''
+        Used to create lists for matrix rows
+        '''
+        list = []
+        for i in range(minimo, massimo):
+            list.append(lista[i])
+        return list
+
+    #=================#
+    # CREATE A MATRIX #
+    #=================#      
+    def matrix_c(self, r_chosen = 0, c_chosen = 0):
+        '''
+        Modified Function for a numerical matrix. Each element is set as "str".
+        '''
+        #ROWS and COLUMNS default:
+        #A matrix made of 0 rows and columns doesn't have any purpose. It is automatically changed to the self.r and self.c
+        #If you do not choose a number of rows or columns, it is automatically set as 0; then, if is satisfied.
+        #It could be usefull to automatically choose the rows and columns from the existing variables self.r and self.c
+        if r_chosen == 0 or c_chosen == 0:
+            r_chosen = self.r
+            c_chosen = self.c
+
+        if r_chosen == 1 or c_chosen == 1: #if there is just a row or a column
+            if r_chosen ==1 and c_chosen == 1: #if it is 1x1
+                return [[self.v[0]]]
+            
+        #======== Usefull Variables ==========#
+        self.matrix = []
+        cont = 0
+        list_tmp = []
+        matrix = []
+        valoremin = 0
+        valoremax = 0
+        cicliannullamento = 0
+        #=====================================#
+
+        
+        while(len(matrix)<r_chosen): #until the number of rows is not as declared
+            if cont<c_chosen: #common case -> no cut
+                cont+=1
+                valoremax+=1
+            else: #it has to cut the dataset
+                valoremin = 0;
+                valoremin = 0 + c_chosen*cicliannullamento;
+                cicliannullamento += 1 #because it will cut. The counter has to be encreased.
+                cont = 0 #reset the counter for the cut
+                #matrix list - add the row
+                matrix.append(self.divide_list(self.v, valoremin, valoremax ))
+        return matrix #return the list created
+
+    def update_matrix(self):
+        matx_list = [i for i in self]
+        return String_Matrix(matx_list, self.r, self.c)
+
+    #==================#
+    # PRINT the matrix #
+    #==================#
+    def __str__(self):
+        """
+        Function used to print a matrix in order to make it more pretty
+        """
+        self.string = ""
+        if len(self.matrix)>1: #it must have at least 2 rows.
+            #......................................#
+            # If the len of the list of list is >1 # [It has at least 2 rows]
+            #......................................#
+
+            for i in range(0, self.r): #For all the rows: (Not used list iteration cause the self.matrix is not always updated. Must b fixed)
+                #print(i, end="| ") #Print the beginning, like: 1|
+                self.string += "{}| ".format(i) 
+                for j in range(0, self.c): #For all the elements in each row
+                    if j == self.c -1:
+                            self.string +="%s"%self.matrix[i][j]
+                    else:
+                            self.string +="%-5s "%self.matrix[i][j]
+                        
+                #print("") # Go to the next line
+                self.string +="\n"
+                
+            #print("   ", end="") #Create space between columns indices.
+            self.string +="   "
+
+            #........................................#
+            # Columns Indices at the end and spaces: #
+            #........................................#
+            #=== Spaces and lines ===#
+            for u in range(0, self.c):
+                if u == self.c -1: #If it is the last one it should not have spaces
+                    self.string +="--"
+                    break #the subsequent line is avoided
+                #print("--"+4*" ", end="")
+                self.string +="--    "
+            #print("")
+            self.string +="\n"
+            #print("   ", end="")
+            self.string +="   "
+            k=0
+
+            #=== Numbers and indices ===#
+            while (k<self.c):
+                if k==self.c -1: #If it is the last one it should not have spaces
+                    self.string += "{}".format(k)
+                    break #the subsequent lines are avoided
+                #print(k, end="     ")
+                self.string += "{}     ".format(k)
+                k+=1
+            #print("")
+            self.string += "\n"
+
+            #print(self.string)
+            return self.string
+
+        
+        else: #it only has a row. So, it is like: [[a,b,c,d,...,z]]
+            #...................................#
+            # There is only a row in the matrix #
+            #...................................#
+            #print("0|", end =" ")
+            self.string += "0| "
+            for j in range(0, self.c): #Must only iterate on the number of columns. Row == 1
+                if j == self.c -1:
+                    #...............................#
+                    # If it is the last of the line # [It should not have the 5 spaces]
+                    #...............................#
+                    self.string +="%s"%self.matrix[0][j]
+                else:
+                    self.string +="%-5s "%self.matrix[0][j]
+
+            #........................................#
+            # Columns Indices at the end and spaces: #
+            #........................................#
+            #=== Spaces and lines ===#
+            #print("")
+            self.string += "\n"
+            #print("   ", end="")
+            self.string += "   "
+            for u in range(0, self.c):
+                if u == self.c -1: #If it is the last one it should not have spaces
+                    self.string +="--"
+                    break #the subsequent line is avoided
+                #print("--"+4*" ", end="")
+                self.string +="--    "
+            #print("")
+            self.string +="\n"
+            #print("   ", end="")
+            self.string +="   "
+            k=0
+
+            #=== Numbers and indices ===#
+            while (k<self.c):
+                #print(k, end="     ")
+                if k==self.c -1: #If it is the last one it should not have spaces
+                    self.string += "{}".format(k)
+                    break #the subsequent lines are avoided
+                self.string += "{}     ".format(k)
+                k+=1
+            #print("")
+            self.string += "\n"
+            return self.string
+
+    #=======================#
+    # __add__() Method: SUM #
+    #=======================#       
+    def __add__(self, other):
+        """
+        It makes possible to add two differents matrix. It return a new matrix, istance of Matrix class.
+        Matrix must have same rows and columns, if not, "None" is returned.
+        """
+        #....................................#
+        # Check if they are Matrix instances #
+        #....................................#
+        if not isinstance(self, String_Matrix) or not isinstance(other, String_Matrix): #operation between Matrix and Matrix
+            if not isinstance(self, String_Matrix) or not isinstance(other, Matrix): #operation between Matrix and Matrix:
+                return None
+            
+        #.............................................#
+        # If it is possible to sum element by element #
+        #.............................................#
+        try:
+            #................................................#
+            # If the number of rows and columns are the same #
+            #................................................#
+            if self.r == other.r and self.c == other.c:
+                #=== Instance ===#
+                C = String_Matrix([],self.r, self.c)
+                #================#
+
+                for i in range(0, self.r): #for every row
+                    for j in range(0, self.c): #for every columns (elements of rows)
+                        #............................................................#
+                        # Change the current element with the sum of the ij elements #
+                        #............................................................#
+                        C.elem_change(i,j, str(self.elem(i,j))+"+"+str(other.elem(i, j)))
+                        
+                #=== Once done, return the Matrix ===#
+                return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
+                #====================================#
+            #................................................#
+            # If the number of rows and columns are the same #
+            #................................................#
+            else:
+                raise ValueError
+                #An exception is raised
+            
+        except Exception as e:
+            print("Not possible to add two Matrix objects with different rows and columns")
+            return None #None is returned.
+
+    #.........................#
+    # Conversion: STR --> NUM #
+    #.........................#
+    def from_str_to_num(self):
+        C = Matrix([], self.r, self.c)
+        for i in range(0,self.r):
+            for j in range(0, self.c):
+                # INT
+                try:
+                    C.elem_change(i,j, int(self.elem(i,j)))
+                except:
+                    #FLOAT
+                    try:
+                        C.elem_change(i,j, float(self.elem(i,j)))
+                    except Exception as PROBLEM:
+                        pass
+
+        self.str_matrix = self
+        self.C_Polynomial = self.str_matrix.Characteristic_Polynomial()
+        return C.update_matrix()
+
+
+    #================#
+    # SUB matrix str #
+    #================#
+    def sub(self, row_deleted, column_deleted):
+        """
+        The function returns the submatrix obtained deleting the row "rowdeleted" and the column "column_deleted".
+        The matrix avoid taking elements with row_deleted or column deleted ad indices.
+        The submatrix number of row and coulmns is, if nxn, the sqrt of the number of elements (so elements of matrix list). If mxn, it is the number of rows and columns - 1.
+        To unify cases, it will all be done in the second way.
+        """
+        cont = 0
+        list_sub = [] #list to store the elements
+        listtmp=[]
+        for i in range(0, self.r): # iterate on rows
+            for j in range(0, self.c): #iterate on columns
+                # ... Check the row && column to delete ... #
+                
+                if i != row_deleted and j != column_deleted: #avoiding 'deleted' row and column elements
+                    cont = cont+1
+                    #.............#
+                    # If it is ok #
+                    #.............#
+                    listtmp.append(self.elem(i,j)) #append to the list
+                    #create a sub matrix
+                    if cont == self.r-1:
+                        list_sub.append(listtmp)
+                        cont=0
+                        
+                        listtmp = []
+                        
+        C = String_Matrix([], self.r - 1, self. c - 1)
+        C.matrix = list_sub
+        return C.update_matrix()
+
+    def Characteristic_Polynomial(self):
+        ''' By definition, PA = det(A-xIn) '''
+        min_xIn = String_Matrix([], self.r, self.c)
+        # In is now all zeros
+        for i in range(self.r):
+            for j in range(self.c):
+                if i == j:
+                    min_xIn.elem_change(i,j,"-x")
+        min_xIn.update_matrix()
+        C = self+min_xIn
+        
+        return str_det_nxn(C, self.r, self.c)
+
+    def check_C_Poly(self):
+        ''' Function to check if the C. Poly. is correct. It uses the determinant and the C. Poly, with x = 0. '''
+        #print("POLYNOMIAL")
+        #print(self.Characteristic_Polynomial())
+        #print(eval(self.Characteristic_Polynomial(), {"x":0}), type(eval(self.Characteristic_Polynomial(), {"x":0})))
+        #print("DETERMINANT")
+        #print(eval(str_det_nxn(self, self.r, self.c)))
+        return (eval(self.Characteristic_Polynomial(), {"x":0}) == eval(str_det_nxn(self, self.r, self.c)))
+
+
+#=============================#
+# Determinant of a nxn Matrix #
+#=============================#
+def str_det_nxn(mat, row, col):
+    """
+    The function returns the determinant of a matrix.
+    The determinant is recursively obtained using Laplace Formula, as sum of multiplication between
+    elements (i,j) and the cofactor(i,j).
+    In case of a 1x1 matrix, is returned the element (0,0) of the matrix.
+    The result is a string, in order to let there be variables without errors.
+    """
+    print(mat)
+    #=== BASE CASE ===#
+    if col == 1: return mat.elem(0,0) #if 1x1, the determinant is a number: it is the element of the 1x1 matrix
+    if row == 2: return "((({})*({})) + (-1)*(({})*({})))".format(mat.elem(0,0), mat.elem(1,1), mat.elem(1,0),mat.elem(0,1)) #((mat[0][0]*mat[1][1]) + (-1)*(mat[1][0]*mat[0][1])) #BASE CASE for the recursion - det2x2
+    #=================#
+
+    #=== RECURSION ===#
+    else:
+        sum_val = "" # variable to save the sum.
+        i = 0 # row iterator - required 
+        #...........................................#
+        # Iteration - j from 0 to number of columns #
+        #...........................................#
+        for j in range (0, col): #Iteration: row = 0, column = (0 to self.c-1)
+            #.................#
+            # Laplace Formula #
+            #.................#
+            C = mat.sub(i,j) #C is a submatrix obtained deleting the row i and column j  -  FUNCTION REQUIRED
+
+            # formula #
+            #add = mat[i][j]*((-1)**(i+j))*det_nxn(C, row-1, col-1) #cofactor calcolus, used in the following expression
+            add_s = "+(({})*((-1)**(({})+({})))*({}))".format(mat.elem(i,j), i, j, str_det_nxn(C, row-1, col-1) )
+            sum_val = sum_val + add_s
+
+        #...............................................#
+        # Once finished the iteration, return the value # 
+        #...............................................#
+        return sum_val
+    #=================# #Idea: it will reach the end for sure
