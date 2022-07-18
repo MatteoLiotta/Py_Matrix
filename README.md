@@ -11,6 +11,9 @@
 
 
 #### LIST OF FUNCTIONS:
+
+##### Matrix
+
  >- **.matrix_c(\[elements\], rows, columns):**\
  >   creates a matrix from a selected (if not, uses the self.v) dataset, number of rows and columns (if not selected, it uses self.r and self.c)
 
@@ -125,8 +128,35 @@
 >    The function returns True if the pivot in the previous row is in the same column of the pivot of the selected row. Else: False.
             
 >- **.gaussian_elimination()**:\
->    The function returns a matrix where it was done the Gaussian Elimination.|
+>    The function returns a matrix where it was done the Gaussian Elimination.
 
+>- **.from_num_to_str(self)**:\
+>    Method to convert a Matrix in a String Matrix
+
+>- **.Characteristic_Polynomial()**:\
+>    Method that returns the str version of the C. Poly. from  a Numerical Matrix.
+
+##### String_Matrix
+
+>- **.__add__(self, other):from_str_to_num(self)**:\
+>    The function returns a string Matrix where the elements are the sum of the strings, with "+"
+>    Example: "3"+"+"+"4" --> "3+4"
+
+>- **.def sub(self, row_deleted, column_deleted)**:\
+>    The function returns a string sub matrix.
+                
+>- **.Characteristic_Polynomial(self)**:\
+>    The function returns the Char. Polynomial of a string matrix. It is required a string Matrix, in order to let there be variables.
+>    The function is returned as a string.
+
+>- **.check_C_Poly(self)**:\
+>    A function used for testing
+
+>- **.from_str_to_num(self)**:\
+>    Method to convert a String Matrix in a Matrix
+
+>- **str_det_nxn(mat, row, col)**:\ 
+>    Determinant of a string matrix. It returns a string, using the Laplace Formula.
 
 #### SAMPLES:
 1) _Import the [module](https://github.com/MatteoLiotta/Py_Matrix/blob/main/Code/Py_Matrix.py):_ 
@@ -358,4 +388,13 @@
        --    --    --    
        0     1     2   
     ```
-    
+
+21) _Characteristic Polynomial_:
+    ```
+    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
+    >>> print(A.characteristic_polynomial())
+    ```
+    > Output:
+    ```
+    '(((0+-x)*(4+-x)) + (-1)*((3+0)*(1+0)))'
+    ```
