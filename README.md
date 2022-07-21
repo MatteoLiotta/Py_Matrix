@@ -89,8 +89,11 @@
 >   It uses the definition: X = A^-1*B.
 >   The vector that solves the system is returned.
 
+>- **`.export()`**:\
+>   The function prints the matrix definition in a usefull common format
+
 >- **`.info()`**:\
->   The function print all relevant informations about the matrix:
+>   The function prints all relevant informations about the matrix:
 >    - rows
 >    - columns
 >    - transpose
@@ -396,5 +399,5 @@
     ```
     > Output:
     ```
-    '(((0+-x)*(4+-x)) + (-1)*((3+0)*(1+0)))'
+    '(((0-x)*(4-x))+(-3))'
     ```
