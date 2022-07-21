@@ -926,6 +926,22 @@ class Matrix():
         return None
 
     #==============================#
+    # EXPORT the Matrix definition # [from [[1,2],[3,4]] to {{1, 2}, {3, 4}}]
+    #==============================#
+    def export(self):
+        L = [i for i in self.matrix]
+        L = str(L)
+        L = list(L)
+        for i,e in enumerate(L):
+            if e == "[":
+                L[i] = "{"
+            elif e == "]":
+                L[i] = "}"
+        string = "".join(L)
+        print(string)
+        return None
+
+    #==============================#
     # Information about the matrix #
     #==============================#
     def info(self):
@@ -952,6 +968,7 @@ class Matrix():
             print(self.inverse())
             print("-> Cofactor Matrix:")
             print(self.cof_matrix())
+        print(self.export())
         return None
 
     #==============================#
@@ -1747,15 +1764,14 @@ class String_Matrix(Matrix):
 
     def characteristic_polynomial(self):
         ''' By definition, PA = det(A-xIn) '''
-        min_xIn = String_Matrix([], self.r, self.c)
-        # In is now all zeros
+        C = String_Matrix([], self.r, self.c)
         for i in range(self.r):
             for j in range(self.c):
                 if i == j:
-                    min_xIn.elem_change(i,j,"-x")
-        min_xIn.update_matrix()
-        C = self+min_xIn
-        
+                    C.elem_change(i,i, str(self.elem(i,i))+"-x")
+                else:
+                    C.elem_change(i,j, str(self.elem(i,j)))
+        C.update_matrix()
         return str_det_nxn(C, self.r, self.c)
 
     def check_C_Poly(self):
@@ -1782,7 +1798,21 @@ def str_det_nxn(mat, row, col):
     #print(mat)
     #=== BASE CASE ===#
     if col == 1: return mat.elem(0,0) #if 1x1, the determinant is a number: it is the element of the 1x1 matrix
-    if row == 2: return "((({})*({})) + (-1)*(({})*({})))".format(mat.elem(0,0), mat.elem(1,1), mat.elem(1,0),mat.elem(0,1)) #((mat[0][0]*mat[1][1]) + (-1)*(mat[1][0]*mat[0][1])) #BASE CASE for the recursion - det2x2
+    if row == 2:
+        str1 = "(({})*({}))".format(mat.elem(0,0), mat.elem(1,1))
+        try: str1 = str(eval(str1)); str1 = "("+str1+")";
+        except: pass;
+        
+        str2 = "(-1)*(({})*({}))".format(mat.elem(1,0),mat.elem(0,1))
+        try: str2 = str(eval(str2)); str2 = "("+str2+")";
+        except: pass;
+
+        #BEFORE: string = "((({})*({})) + (-1)*(({})*({})))".format(mat.elem(0,0), mat.elem(1,1), mat.elem(1,0),mat.elem(0,1)) #((mat[0][0]*mat[1][1]) + (-1)*(mat[1][0]*mat[0][1])) #BASE CASE for the recursion - det2x2        
+        string_def = "("+str1+"+"+str2+")"
+        try: string_def = str(eval(string_def)); string_def = "("+string_def+")";
+        except: pass;
+
+        return string_def
     #=================#
 
     #=== RECURSION ===#
@@ -1799,9 +1829,24 @@ def str_det_nxn(mat, row, col):
             C = mat.sub(i,j) #C is a submatrix obtained deleting the row i and column j  -  FUNCTION REQUIRED
 
             # formula #
-            #add = mat[i][j]*((-1)**(i+j))*det_nxn(C, row-1, col-1) #cofactor calcolus, used in the following expression
-            add_s = "+(({})*((-1)**(({})+({})))*({}))".format(mat.elem(i,j), i, j, str_det_nxn(C, row-1, col-1) )
-            sum_val = sum_val + add_s
+            # The string will be now divided in sub-strings. Then, it will be possible to change ((4+0)+(2-3)) in (3).
+            # FORMULA: add = mat[i][j]*((-1)**(i+j))*det_nxn(C, row-1, col-1) #cofactor calcolus, used in the following expression
+
+            add_str_1 = "({})".format(mat.elem(i,j))
+            try: add_str_1 = str(eval(add_str_1)); add_str_1 = "("+add_str_1+")";
+            except: pass;
+                        
+            add_str_3 = "(-1)**({})".format(i+j)
+            try: add_str_3 = str(eval(add_str_3)); add_str_3 = "("+add_str_3+")";
+            except: pass;
+            
+            add_str = "+"+"("+add_str_1+"*"+add_str_3+"*("+str(str_det_nxn(C, row-1, col-1))+"))" #<-- Recursion
+            try: add_str = str(eval(add_str)); add_str = "+("+add_str+")";
+            except: pass;
+            
+            # BEFORE:
+            #add_s = "+(({})*((-1)**(({})+({})))*({}))".format(mat.elem(i,j), i, j, str_det_nxn(C, row-1, col-1) )
+            sum_val = sum_val + add_str
 
         #...............................................#
         # Once finished the iteration, return the value # 
