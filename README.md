@@ -52,11 +52,8 @@
 >    The function returns a Matrix where col1 and col2 of self are switched.
 >    It is the first elementary operation on columns.
 
->- **`.rotate`:**\
+>- **`.rotate()`:**\
 >    This funtion returns a Matrix rotated by 90 degrees counterclockwise.
->    1 2 3            3 6 9
->    4 5 6  --> f --> 2 5 8
->    7 8 9            1 4 7
 
 >- **`.elementary_op2(row, value)`:**\
 >    The function returns a Matrix where row1 of self is multiplied by a chosen number.
@@ -150,12 +147,7 @@
 >    Method that returns the str version of the C. Poly. from  a Numerical Matrix.
 
 >- **`antidiagonal_1(dimension)`**:\
->    This function takes the dimension of the output matrix in order to create an antidiagonal matrix of all 1:
->    0 ... 0 1
->    0 ... 1 0
->    .     . .
->    :     : :
->    1 ... 0 0
+>    This function takes the dimension of the output matrix in order to create an antidiagonal matrix of all 1.
 
 ##### String_Matrix
 
@@ -418,4 +410,16 @@
     > Output:
     ```
     (((0-x)*(4-x))+(-3))
+    ```
+22) _Rotate a Matrix counterclockwise_:
+    ```
+    >>> A = py_m.Matrix([0,1,3,4], 2, 2)
+    >>> print(A.rotate())
+    ```
+    > Output:
+    ```
+    0| 1     4
+    1| 0     3
+       --    --
+       0     1
     ```
