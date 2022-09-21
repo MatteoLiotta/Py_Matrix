@@ -755,6 +755,30 @@ class Matrix():
         
         return C.update_matrix() #To be sure, instead of C, it returns a matrix instance
 
+    #......................................#
+    # Matrix Rotation 90° counterclockwise #
+    #......................................#
+    def rotate(self):
+        '''This funtion returns a Matrix rotated by 90 degrees counterclockwise.
+            1 2 3            3 6 9
+            4 5 6  --> f --> 2 5 8
+            7 8 9            1 4 7
+        '''
+        return (self * antidiagonal_1(self.r)).t()
+
+    #=============================#
+    # ELEMENTARY OP. 1 on COLUMNS #
+    #=============================#
+    def change_col(self, col1, col2):
+        '''The function returns a Matrix where col1 and col2 are switched'''
+        col1 = self.c - col1-1 # Required indeces conversion for the rotated matrix
+        col2 = self.c - col2-1
+
+        M = (self.rotate()).elementary_op1(col1, col2)
+        for i in range(3):
+            M = M.rotate()
+        return M
+
     #=========================#
     # ELEMENTARY OPERATION: 2 # [Multiply by a number]
     #=========================#
@@ -1853,3 +1877,27 @@ def str_det_nxn(mat, row, col):
         #...............................................#
         return sum_val
     #=================# #Idea: it will reach the end for sure
+
+
+# ============== # Antidiagonal 1s Matrix # ============= #
+def antidiagonal_1(dimension):
+    ''' This function takes the dimension of the output matrix in order to create an antidiagonal matrix of all 1:
+        0 ... 0 1
+        0 ... 1 0
+        .     . .
+        :     : :
+        1 ... 0 0
+    '''    
+    data = []
+    for i in range(dimension*dimension):
+        data.append(0) # [0, ..., 0]
+            
+    counter = 0
+    for i in range(dimension):
+        for j in range(dimension):
+            if i+j==dimension-1: # if it is in the antidiagonal
+                data[counter] = 1;
+            counter +=1
+            
+    return Matrix(data, dimension, dimension)
+# ======================================================== #

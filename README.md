@@ -48,6 +48,16 @@
 >    The function returns a Matrix where row1 and row2 of self are switched.
 >    It is the first elementary operation.
 
+>- **`.change_col(col1, col2)`:**\
+>    The function returns a Matrix where col1 and col2 of self are switched.
+>    It is the first elementary operation on columns.
+
+>- **`.rotate`:**\
+>    This funtion returns a Matrix rotated by 90 degrees counterclockwise.
+>    1 2 3            3 6 9
+>    4 5 6  --> f --> 2 5 8
+>    7 8 9            1 4 7
+
 >- **`.elementary_op2(row, value)`:**\
 >    The function returns a Matrix where row1 of self is multiplied by a chosen number.
 >    It is the second elementary operation.
@@ -138,6 +148,14 @@
 
 >- **`.characteristic_polynomial()`**:\
 >    Method that returns the str version of the C. Poly. from  a Numerical Matrix.
+
+>- **`antidiagonal_1(dimension)`**:\
+>    This function takes the dimension of the output matrix in order to create an antidiagonal matrix of all 1:
+>    0 ... 0 1
+>    0 ... 1 0
+>    .     . .
+>    :     : :
+>    1 ... 0 0
 
 ##### String_Matrix
 
